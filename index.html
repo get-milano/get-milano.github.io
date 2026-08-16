@@ -9,6 +9,23 @@
       content="Milano is a client-only, design-system-agnostic Document-Driven UI framework for SwiftUI and Compose. Documents become native UI, identically on both platforms."
     />
     <link rel="icon" href="favicon.ico" />
+    <link rel="canonical" href="https://get-milano.dev/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://get-milano.dev/" />
+    <meta property="og:site_name" content="Milano" />
+    <meta property="og:title" content="Milano · Document-Driven UI" />
+    <meta
+      property="og:description"
+      content="Define interface structure and behavior once in JSON; Milano validates it and renders it through your own SwiftUI and Compose components."
+    />
+    <meta property="og:image" content="https://get-milano.dev/get-milano.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Milano · Document-Driven UI" />
+    <meta
+      name="twitter:description"
+      content="Define interface structure and behavior once in JSON; Milano validates it and renders it through your own SwiftUI and Compose components."
+    />
+    <meta name="twitter:image" content="https://get-milano.dev/get-milano.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -71,7 +88,8 @@
       header .shell {
         display: flex;
         align-items: baseline;
-        gap: 24px;
+        flex-wrap: wrap;
+        gap: 12px 24px;
         padding-top: 20px;
         padding-bottom: 20px;
       }
@@ -121,6 +139,10 @@
         align-items: center;
         padding-top: 72px;
         padding-bottom: 80px;
+      }
+
+      .hero .shell > * {
+        min-width: 0;
       }
 
       .doc {
@@ -182,13 +204,47 @@
         font-weight: 600;
       }
 
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .cta {
+        display: inline-block;
+        background: var(--tram);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 10px 22px;
+        border-radius: 999px;
+      }
+
+      .cta:hover {
+        background: var(--bright);
+      }
+
+      .cta.secondary {
+        background: transparent;
+        color: var(--tram);
+        border: 1.5px solid var(--tram);
+      }
+
+      .cta.secondary:hover {
+        color: var(--bright);
+        border-color: var(--bright);
+        background: transparent;
+      }
+
       @media (prefers-reduced-motion: no-preference) {
         .doc {
-          animation: settle 0.5s ease both;
+          animation: settle 0.3s ease both;
         }
 
         .rendered {
-          animation: settle 0.5s ease 0.25s both;
+          animation: settle 0.3s ease 0.1s both;
         }
 
         @keyframes settle {
@@ -201,6 +257,37 @@
             transform: none;
           }
         }
+      }
+
+      /* Architecture flow strip */
+      .flow .shell {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 10px 14px;
+        padding-top: 26px;
+        padding-bottom: 26px;
+        font-family: "Fragment Mono", monospace;
+        font-size: 12.5px;
+      }
+
+      .flow-box {
+        border: 1px solid var(--rail);
+        background: var(--card);
+        border-radius: 8px;
+        padding: 7px 14px;
+        color: var(--steel);
+      }
+
+      .flow-milano {
+        border-color: var(--tram);
+        color: var(--tram);
+        font-weight: 700;
+      }
+
+      .flow-arrow {
+        color: var(--tram);
       }
 
       /* Destinations, rendered as resolved nodes */
@@ -345,14 +432,29 @@
             <div class="eyebrow">// resolved on SwiftUI and Compose, identically</div>
             <h1>Documents become native&nbsp;UI.</h1>
             <p>
-              Milano is a client-only, design-system-agnostic
-              <strong>Document-Driven UI</strong> framework for
-              <strong>SwiftUI</strong> and <strong>Compose</strong>. A JSON
-              document describes structure and behavior; your components draw
-              every pixel. Validated at one gate, rendered identically on both
-              platforms.
+              Define interface structure and behavior once in JSON. Milano
+              validates it and renders it through your own
+              <strong>SwiftUI</strong> and <strong>Compose</strong> components,
+              without owning your design system or requiring a backend.
+              Validated at one gate, rendered identically on both platforms.
+              Built for remotely configurable banners, interstitials, and
+              forms.
             </p>
+            <div class="cta-row">
+              <a class="cta" href="/playground/">Open the playground</a>
+              <a class="cta secondary" href="/sdk/">Read the docs</a>
+            </div>
           </div>
+        </div>
+      </section>
+
+      <section class="flow rail" aria-label="How Milano works">
+        <div class="shell">
+          <span class="flow-box">JSON document</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-box flow-milano">Milano · gate + runtime</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-box">your SwiftUI / Compose components</span>
         </div>
       </section>
 
@@ -397,7 +499,7 @@
         <a href="https://github.com/get-milano/sdk">sdk</a>
         <a href="https://github.com/get-milano/playground">playground</a>
         <span class="spacer"></span>
-        <span>Made with love by <a href="https://kimi.blog">Ezequiel (Kimi) Aceto</a></span>
+        <span>Made with ♥️ by <a href="https://kimi.blog">Ezequiel (Kimi) Aceto</a></span>
       </div>
     </footer>
   </body>
