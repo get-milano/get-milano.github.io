@@ -8,6 +8,15 @@ The landing page for Milano, served by GitHub Pages as the organization site. St
 - **Custom domain**: `get-milano.dev` (the `CNAME` file in this repo). With the custom domain on this repo, the project sites are also reachable under it: [/specs/](https://get-milano.dev/specs/), [/sdk/](https://get-milano.dev/sdk/), [/playground/](https://get-milano.dev/playground/).
 - **DNS**: apex `A` records to GitHub Pages (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`) and a `CNAME` record for `www` pointing to `get-milano.github.io`. GitHub then redirects `www.get-milano.dev` to the apex automatically. Enable "Enforce HTTPS" once the certificate is issued.
 
+## Files
+
+- `index.html` — the page itself, styles inline, no build step.
+- `404.html` — branded not-found page, served by Pages for unmatched paths under the apex.
+- `robots.txt`, `sitemap.xml` — crawl directives; the sitemap lists the apex plus `/sdk/`, `/specs/`, and `/playground/`. Update `lastmod` when the page changes materially.
+- `site.webmanifest`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `favicon.ico` — icons and install metadata.
+- `og-cover.png` — 1200×630 link preview used by `og:image` and `twitter:image`.
+- Structured data (`Organization`, `WebSite`, `SoftwareApplication`, `FAQPage`) is a single JSON-LD block in `index.html`. Its questions and answers mirror the on-page "Questions" section — change both together, or the markup and the schema drift.
+
 ## License
 
 Apache-2.0, matching the SDK. See the [organization](https://github.com/get-milano).
