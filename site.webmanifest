@@ -1,0 +1,14 @@
+{
+  "name": "Milano · Document-Driven UI",
+  "short_name": "Milano",
+  "description": "Define interface structure and behavior once in JSON; Milano renders it through your own SwiftUI, Compose, and React components.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fdf8fa",
+  "theme_color": "#d12360",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
