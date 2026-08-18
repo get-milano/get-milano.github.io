@@ -1,0 +1,5 @@
+# https://get-milano.dev/
+User-agent: *
+Allow: /
+
+Sitemap: https://get-milano.dev/sitemap.xml

@@ -3,29 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Milano · Document-Driven UI</title>
+    <title>Milano · Document-Driven UI for SwiftUI, Compose &amp; React</title>
     <meta
       name="description"
-      content="Milano is a client-only, design-system-agnostic Document-Driven UI framework for SwiftUI and Compose. Documents become native UI, identically on both platforms."
+      content="Milano is a document-driven UI framework for SwiftUI, Compose, and React. Define interface structure and behavior once in JSON; Milano validates it and renders it natively through your own components."
     />
-    <link rel="icon" href="favicon.ico" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="author" content="Ezequiel (Kimi) Aceto" />
+    <meta name="theme-color" content="#fdf8fa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1d151b" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
     <link rel="canonical" href="https://get-milano.dev/" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
+
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://get-milano.dev/" />
     <meta property="og:site_name" content="Milano" />
-    <meta property="og:title" content="Milano · Document-Driven UI" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Milano · Document-Driven UI for SwiftUI, Compose &amp; React" />
     <meta
       property="og:description"
-      content="Define interface structure and behavior once in JSON; Milano validates it and renders it through your own SwiftUI and Compose components."
+      content="Define interface structure and behavior once in JSON; Milano validates it and renders it through your own SwiftUI, Compose, and React components."
     />
-    <meta property="og:image" content="https://get-milano.dev/get-milano.png" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Milano · Document-Driven UI" />
+    <meta property="og:image" content="https://get-milano.dev/og-cover.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Milano — documents become native UI. A JSON document passes through the Milano gate and runtime into your own SwiftUI, Compose, and React components."
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Milano · Document-Driven UI for SwiftUI, Compose &amp; React" />
     <meta
       name="twitter:description"
-      content="Define interface structure and behavior once in JSON; Milano validates it and renders it through your own SwiftUI and Compose components."
+      content="Define interface structure and behavior once in JSON; Milano validates it and renders it through your own SwiftUI, Compose, and React components."
     />
-    <meta name="twitter:image" content="https://get-milano.dev/get-milano.png" />
+    <meta name="twitter:image" content="https://get-milano.dev/og-cover.png" />
+    <meta
+      name="twitter:image:alt"
+      content="Milano — documents become native UI, on SwiftUI, Compose, and React."
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -290,6 +317,40 @@
         color: var(--tram);
       }
 
+      /* Platform targets, continuing the flow strip */
+      .platforms .shell {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
+
+      .platform {
+        border-left: 2px solid var(--rail);
+        padding-left: 16px;
+      }
+
+      .platform h2 {
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        margin-bottom: 4px;
+      }
+
+      .platform p {
+        color: var(--steel);
+        font-size: 14.5px;
+        margin-bottom: 8px;
+      }
+
+      .platform code {
+        color: var(--tram);
+        font-family: "Fragment Mono", monospace;
+        font-size: 12.5px;
+        overflow-wrap: anywhere;
+      }
+
       /* Destinations, rendered as resolved nodes */
       .nodes .shell {
         display: grid;
@@ -343,6 +404,44 @@
         color: var(--tram);
       }
 
+      /* Questions */
+      .faq .shell {
+        padding-top: 44px;
+        padding-bottom: 56px;
+      }
+
+      .faq h2 {
+        font-variation-settings: "wdth" 110;
+        font-weight: 800;
+        font-size: 23px;
+        letter-spacing: -0.01em;
+        margin-bottom: 26px;
+      }
+
+      .qa-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 26px 44px;
+      }
+
+      .qa h3 {
+        font-size: 15.5px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+
+      .qa p {
+        color: var(--steel);
+        font-size: 14.5px;
+      }
+
+      .qa code {
+        font-family: "Fragment Mono", monospace;
+        font-size: 12.5px;
+        color: var(--tram);
+        overflow-wrap: anywhere;
+      }
+
       /* Footer */
       footer .shell {
         display: flex;
@@ -388,8 +487,18 @@
           order: 1;
         }
 
+        .platforms .shell {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+
         .nodes .shell {
           grid-template-columns: 1fr;
+        }
+
+        .qa-grid {
+          grid-template-columns: 1fr;
+          gap: 22px;
         }
 
         .node p {
@@ -397,12 +506,147 @@
         }
       }
     </style>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://get-milano.dev/#organization",
+            "name": "Milano",
+            "url": "https://get-milano.dev/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://get-milano.dev/icon-512.png",
+              "width": 512,
+              "height": 512
+            },
+            "sameAs": [
+              "https://github.com/get-milano"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://get-milano.dev/#website",
+            "url": "https://get-milano.dev/",
+            "name": "Milano",
+            "description": "Milano is a document-driven UI framework for SwiftUI, Compose, and React. Define interface structure and behavior once in JSON; Milano validates it and renders it natively through your own components.",
+            "inLanguage": "en",
+            "publisher": {
+              "@id": "https://get-milano.dev/#organization"
+            }
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://get-milano.dev/#software",
+            "name": "Milano",
+            "alternateName": "Milano SDK",
+            "url": "https://get-milano.dev/",
+            "applicationCategory": "DeveloperApplication",
+            "applicationSubCategory": "UI framework",
+            "operatingSystem": "iOS, iPadOS, macOS, watchOS, Android, Web",
+            "description": "Milano is a document-driven UI framework for SwiftUI, Compose, and React. Define interface structure and behavior once in JSON; Milano validates it and renders it natively through your own components.",
+            "license": "https://www.apache.org/licenses/LICENSE-2.0",
+            "programmingLanguage": [
+              "Swift",
+              "Kotlin",
+              "TypeScript"
+            ],
+            "softwareVersion": "1.0.0",
+            "image": "https://get-milano.dev/og-cover.png",
+            "author": {
+              "@type": "Person",
+              "name": "Ezequiel (Kimi) Aceto",
+              "url": "https://kimi.blog"
+            },
+            "publisher": {
+              "@id": "https://get-milano.dev/#organization"
+            },
+            "codeRepository": "https://github.com/get-milano",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://get-milano.dev/#webpage",
+            "url": "https://get-milano.dev/",
+            "name": "Milano · Document-Driven UI for SwiftUI, Compose & React",
+            "description": "Milano is a document-driven UI framework for SwiftUI, Compose, and React. Define interface structure and behavior once in JSON; Milano validates it and renders it natively through your own components.",
+            "inLanguage": "en",
+            "isPartOf": {
+              "@id": "https://get-milano.dev/#website"
+            },
+            "about": {
+              "@id": "https://get-milano.dev/#software"
+            },
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://get-milano.dev/og-cover.png"
+            },
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is document-driven UI?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A JSON document describes the structure and behavior of a screen. The client validates that document against a vocabulary and renders it with native components, so a screen can change without shipping new layout code."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is this server-driven UI?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "You can use it that way, but Milano itself is client-only and needs no backend. Documents can come from your API, a CDN, a feature-flag payload, or the app bundle. Serve them remotely and you get server-driven UI without a server-side rendering stack."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does Milano replace my design system?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. Milano draws nothing. It resolves a document into calls to the SwiftUI, Compose, and React components you already own, so your typography, spacing, and theming stay yours."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which platforms are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "SwiftUI on iOS, iPadOS, macOS, and watchOS (MilanoSDK); Compose on Android and the JVM (dev.get-milano:engine-compose); React on the web and React Native (@get-milano/react)."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How does rendering stay identical across platforms?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Every engine implements the same normative specification and passes the same conformance suite. Invalid documents are rejected at the gate before anything renders, so a document either works everywhere or fails everywhere."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is it good for?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Surfaces that change faster than your release train: remotely configurable banners, interstitials, onboarding, promos, and forms — updated without waiting on an app store review."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <header>
       <div class="shell">
         <a class="wordmark" href="/"><img src="get-milano.png" alt="" width="22" height="22" />Milano<span class="dot">.</span></a>
-        <nav>
+        <nav aria-label="Main">
           <a href="/specs/">Specs</a>
           <a href="/sdk/">SDK</a>
           <a href="/playground/">Playground</a>
@@ -430,14 +674,15 @@
 }</pre>
           </div>
           <div class="rendered">
-            <div class="eyebrow">// resolved on SwiftUI and Compose, identically</div>
+            <div class="eyebrow">// resolved on SwiftUI, Compose, and React, identically</div>
             <h1>Documents become native&nbsp;UI.</h1>
             <p>
               Define interface structure and behavior once in JSON. Milano
               validates it and renders it through your own
-              <strong>SwiftUI</strong> and <strong>Compose</strong> components,
-              without owning your design system or requiring a backend.
-              Validated at one gate, rendered identically on both platforms.
+              <strong>SwiftUI</strong>, <strong>Compose</strong>, and
+              <strong>React</strong> components, without owning your design
+              system or requiring a backend. Validated at one gate, rendered
+              identically on every platform.
               Built for remotely configurable banners, interstitials, and
               forms.
             </p>
@@ -455,7 +700,37 @@
           <span class="flow-arrow">→</span>
           <span class="flow-box flow-milano">Milano · gate + runtime</span>
           <span class="flow-arrow">→</span>
-          <span class="flow-box">your SwiftUI / Compose components</span>
+          <span class="flow-box">your SwiftUI / Compose / React components</span>
+        </div>
+      </section>
+
+      <section class="platforms rail" aria-label="Supported platforms">
+        <div class="shell">
+          <div class="platform">
+            <h2>SwiftUI</h2>
+            <p>
+              iPhone, iPad, macOS, watchOS. Swift 6, strict concurrency, one
+              signed binary per release.
+            </p>
+            <code>MilanoSDK</code>
+          </div>
+          <div class="platform">
+            <h2>Compose</h2>
+            <p>
+              Android and the JVM. Kotlin Multiplatform, consumable from
+              source or from the published artifact.
+            </p>
+            <code>dev.get-milano:engine-compose</code>
+          </div>
+          <div class="platform">
+            <h2>React</h2>
+            <p>
+              The web and React Native from one binding. No native modules,
+              no autolinking: Milano draws nothing, so nothing about it is
+              platform-specific.
+            </p>
+            <code>@get-milano/react</code>
+          </div>
         </div>
       </section>
 
@@ -475,8 +750,8 @@
             <div class="type">"type": "SDK"</div>
             <h2>Ship it in your app</h2>
             <p>
-              The SwiftUI and Compose engines, getting-started guides, sample
-              apps, and the bridge to your design system.
+              The SwiftUI, Compose, and TypeScript engines, getting-started
+              guides, sample apps, and the bridge to your design system.
             </p>
             <span class="go">Read the SDK docs →</span>
           </a>
@@ -485,10 +760,71 @@
             <h2>Read the contract</h2>
             <p>
               The normative specs: document model, expression language, state
-              and actions, and the conformance suite both engines pass.
+              and actions, and the conformance suite every engine passes.
             </p>
             <span class="go">Read the specs →</span>
           </a>
+        </div>
+      </section>
+
+      <section class="faq rail" aria-labelledby="questions">
+        <div class="shell">
+          <h2 id="questions">Questions</h2>
+          <div class="qa-grid">
+            <div class="qa">
+              <h3>What is document-driven UI?</h3>
+              <p>
+                A JSON document describes the structure and behavior of a
+                screen. The client validates that document against a
+                vocabulary and renders it with native components, so a screen
+                can change without shipping new layout code.
+              </p>
+            </div>
+            <div class="qa">
+              <h3>Is this server-driven UI?</h3>
+              <p>
+                You can use it that way, but Milano itself is client-only and
+                needs no backend. Documents can come from your API, a CDN, a
+                feature-flag payload, or the app bundle. Serve them remotely
+                and you get server-driven UI without a server-side rendering
+                stack.
+              </p>
+            </div>
+            <div class="qa">
+              <h3>Does Milano replace my design system?</h3>
+              <p>
+                No. Milano draws nothing. It resolves a document into calls to
+                the SwiftUI, Compose, and React components you already own, so
+                your typography, spacing, and theming stay yours.
+              </p>
+            </div>
+            <div class="qa">
+              <h3>Which platforms are supported?</h3>
+              <p>
+                SwiftUI on iOS, iPadOS, macOS, and watchOS
+                (<code>MilanoSDK</code>); Compose on Android and the JVM
+                (<code>dev.get-milano:engine-compose</code>); React on the web
+                and React Native (<code>@get-milano/react</code>).
+              </p>
+            </div>
+            <div class="qa">
+              <h3>How does rendering stay identical across platforms?</h3>
+              <p>
+                Every engine implements the same normative specification and
+                passes the same conformance suite. Invalid documents are
+                rejected at the gate before anything renders, so a document
+                either works everywhere or fails everywhere.
+              </p>
+            </div>
+            <div class="qa">
+              <h3>What is it good for?</h3>
+              <p>
+                Surfaces that change faster than your release train: remotely
+                configurable banners, interstitials, onboarding, promos, and
+                forms — updated without waiting on an app store review.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </main>
