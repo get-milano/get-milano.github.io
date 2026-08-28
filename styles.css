@@ -1,0 +1,466 @@
+:root {
+  --paper: #fdf8fa;
+  --ink: #221721;
+  --tram: #d12360;
+  --bright: #fd4a9c;
+  --cyan: #14bccb;
+  --steel: #77626e;
+  --rail: #f3d3df;
+  --card: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1d151b;
+    --ink: #f7edf2;
+    --tram: #fd4a9c;
+    --bright: #ff77b5;
+    --cyan: #1de8f7;
+    --steel: #a58e9b;
+    --rail: #43303c;
+    --card: #271d25;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Archivo", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+a {
+  color: inherit;
+}
+
+.rail {
+  border-top: 1px solid var(--rail);
+}
+
+.shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Top bar */
+header .shell {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-variation-settings: "wdth" 125;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.wordmark img {
+  display: block;
+}
+
+.wordmark .dot {
+  color: var(--tram);
+}
+
+header nav {
+  margin-left: auto;
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+}
+
+header nav a {
+  text-decoration: none;
+  color: var(--steel);
+}
+
+header nav a:hover,
+header nav a:focus-visible {
+  color: var(--ink);
+}
+
+/* Hero: the document and what it renders */
+.hero .shell {
+  display: grid;
+  grid-template-columns: minmax(340px, 560px) 1fr;
+  gap: 44px;
+  align-items: center;
+  padding-top: 72px;
+  padding-bottom: 80px;
+}
+
+.hero .shell > * {
+  min-width: 0;
+}
+
+.doc {
+  background: var(--card);
+  border: 1px solid var(--rail);
+  border-radius: 10px;
+  padding: 42px 24px 30px;
+  font-family: "Fragment Mono", monospace;
+  font-size: 12.5px;
+  line-height: 2.05;
+  position: relative;
+}
+
+.doc pre {
+  overflow-x: auto;
+}
+
+.doc-label {
+  position: absolute;
+  top: 12px;
+  left: 24px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--steel);
+}
+
+.doc .k {
+  color: var(--steel);
+}
+
+.doc .x {
+  color: var(--tram);
+}
+
+.rendered .eyebrow {
+  font-family: "Fragment Mono", monospace;
+  font-size: 12px;
+  color: var(--cyan);
+  margin-bottom: 14px;
+}
+
+.rendered h1 {
+  font-variation-settings: "wdth" 110;
+  font-weight: 800;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  margin-bottom: 18px;
+}
+
+.rendered p {
+  max-width: 46ch;
+  color: var(--steel);
+  font-size: 17px;
+}
+
+.rendered strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.cta {
+  display: inline-block;
+  background: var(--tram);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 10px 22px;
+  border-radius: 999px;
+}
+
+.cta:hover {
+  background: var(--bright);
+}
+
+.cta.secondary {
+  background: transparent;
+  color: var(--tram);
+  border: 1.5px solid var(--tram);
+}
+
+.cta.secondary:hover {
+  color: var(--bright);
+  border-color: var(--bright);
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .doc {
+    animation: settle 0.3s ease both;
+  }
+
+  .rendered {
+    animation: settle 0.3s ease 0.1s both;
+  }
+
+  @keyframes settle {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Architecture flow strip */
+.flow .shell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 14px;
+  padding-top: 26px;
+  padding-bottom: 26px;
+  font-family: "Fragment Mono", monospace;
+  font-size: 12.5px;
+}
+
+.flow-box {
+  border: 1px solid var(--rail);
+  background: var(--card);
+  border-radius: 8px;
+  padding: 7px 14px;
+  color: var(--steel);
+}
+
+.flow-milano {
+  border-color: var(--tram);
+  color: var(--tram);
+  font-weight: 700;
+}
+
+.flow-arrow {
+  color: var(--tram);
+}
+
+/* Platform targets, continuing the flow strip */
+.platforms .shell {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.platform {
+  border-left: 2px solid var(--rail);
+  padding-left: 16px;
+}
+
+.platform h2 {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.platform p {
+  color: var(--steel);
+  font-size: 14.5px;
+  margin-bottom: 8px;
+}
+
+.platform code {
+  color: var(--tram);
+  font-family: "Fragment Mono", monospace;
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+
+.platform h2 a {
+  text-decoration: none;
+}
+
+.platform h2 a:hover,
+.platform h2 a:focus-visible {
+  text-decoration: underline;
+}
+
+.platform .reference {
+  display: block;
+  margin-top: 10px;
+  color: var(--steel);
+  font-size: 13.5px;
+}
+
+.platform .reference:hover,
+.platform .reference:focus-visible {
+  color: var(--ink);
+}
+
+/* Destinations, rendered as resolved nodes */
+.nodes .shell {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+
+.node {
+  display: block;
+  text-decoration: none;
+  background: var(--card);
+  border: 1px solid var(--rail);
+  border-top: 3px solid var(--rail);
+  border-radius: 10px;
+  padding: 20px;
+  transition: border-top-color 0.15s ease;
+}
+
+.node:hover,
+.node:focus-visible {
+  border-top-color: var(--bright);
+}
+
+.node .type {
+  font-family: "Fragment Mono", monospace;
+  font-size: 11.5px;
+  color: var(--steel);
+  margin-bottom: 12px;
+}
+
+.node h2 {
+  font-variation-settings: "wdth" 110;
+  font-weight: 700;
+  font-size: 21px;
+  margin-bottom: 8px;
+}
+
+.node p {
+  font-size: 14.5px;
+  color: var(--steel);
+  min-height: 4.4em;
+}
+
+.node .go {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tram);
+}
+
+/* Questions */
+.faq .shell {
+  padding-top: 44px;
+  padding-bottom: 56px;
+}
+
+.faq h2 {
+  font-variation-settings: "wdth" 110;
+  font-weight: 800;
+  font-size: 23px;
+  letter-spacing: -0.01em;
+  margin-bottom: 26px;
+}
+
+.qa-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px 44px;
+}
+
+.qa h3 {
+  font-size: 15.5px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.qa p {
+  color: var(--steel);
+  font-size: 14.5px;
+}
+
+.qa code {
+  font-family: "Fragment Mono", monospace;
+  font-size: 12.5px;
+  color: var(--tram);
+  overflow-wrap: anywhere;
+}
+
+/* Footer */
+footer .shell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  padding-top: 26px;
+  padding-bottom: 44px;
+  font-size: 13.5px;
+  color: var(--steel);
+}
+
+footer a {
+  color: var(--steel);
+}
+
+footer a:hover,
+footer a:focus-visible {
+  color: var(--ink);
+}
+
+footer .spacer {
+  flex: 1;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+@media (max-width: 820px) {
+  .hero .shell {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding-top: 44px;
+    padding-bottom: 52px;
+  }
+
+  .doc {
+    order: 2;
+  }
+
+  .rendered {
+    order: 1;
+  }
+
+  .platforms .shell {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .nodes .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .qa-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .node p {
+    min-height: 0;
+  }
+}

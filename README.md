@@ -1,6 +1,6 @@
 # get-milano.dev
 
-The landing page for Milano, served by GitHub Pages as the organization site. Static, no build step: `index.html` is the page.
+The landing page for Milano, served by GitHub Pages as the organization site. Static, no build step: `index.html` is the page, `styles.css` its stylesheet.
 
 ## Serving setup
 
@@ -10,12 +10,17 @@ The landing page for Milano, served by GitHub Pages as the organization site. St
 
 ## Files
 
-- `index.html` — the page itself, styles inline, no build step.
-- `404.html` — branded not-found page, served by Pages for unmatched paths under the apex.
-- `robots.txt`, `sitemap.xml` — crawl directives; the sitemap lists the apex plus `/sdk/`, `/specs/`, and `/playground/`. Update `lastmod` when the page changes materially.
-- `site.webmanifest`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `favicon.ico` — icons and install metadata.
-- `og-cover.png` — 1200×630 link preview used by `og:image` and `twitter:image`.
-- Structured data (`Organization`, `WebSite`, `SoftwareApplication`, `FAQPage`) is a single JSON-LD block in `index.html`. Its questions and answers mirror the on-page "Questions" section — change both together, or the markup and the schema drift.
+- `index.html`: the page itself, no build step.
+- `styles.css`: the one stylesheet, shared with `404.html` so the two pages cannot drift apart.
+- `404.html`: branded not-found page, served by Pages for unmatched paths under the apex.
+- `robots.txt`, `sitemap.xml`: crawl directives; the sitemap lists the apex plus `/sdk/`, `/specs/`, and `/playground/`. Update `lastmod` when the page changes materially.
+- `site.webmanifest`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `favicon.ico`: icons and install metadata.
+- `og-cover.png`: 1200×630 link preview used by `og:image` and `twitter:image`.
+- Structured data (`Organization`, `WebSite`, `SoftwareApplication`, `FAQPage`) is a single JSON-LD block in `index.html`. Its questions and answers mirror the on-page "Questions" section; change both together, or the markup and the schema drift. It carries no `softwareVersion` on purpose: there is no build step to stamp one, so it would only ever be stale; the `releaseNotes` link points at the SDK changelog, which is always current.
+
+## Style
+
+Prose on this site never uses the em dash character, the rule the specs and SDK repositories check in CI; this repository has no CI, so it is a rule to keep by hand.
 
 ## License
 
