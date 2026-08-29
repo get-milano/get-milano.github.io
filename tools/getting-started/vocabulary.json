@@ -1,0 +1,31 @@
+{
+  "milano": "2.0.0",
+  "name": "promo",
+  "version": "1.0.0",
+  "components": {
+    "Column": { "children": true },
+    "Text": {
+      "properties": {
+        "text": "string",
+        "role": { "enum": ["title", "body"] }
+      }
+    },
+    "Image": {
+      "properties": {
+        "url": "string",
+        "height": "int?",
+        "cornerRadius": "int?"
+      }
+    },
+    "Button": {
+      "properties": {
+        "label": "string",
+        "enabled": "bool"
+      },
+      "events": { "tap": null }
+    }
+  },
+  "actions": {
+    "openUrl": { "parameters": { "url": "string" } }
+  }
+}

@@ -6,7 +6,7 @@
     <title>Getting started · Milano</title>
     <meta
       name="description"
-      content="Add Milano to an existing iOS app in eight steps: scaffold a producer folder with the CLI, declare a vocabulary, write a banner document, generate Swift bindings, bridge your SwiftUI views, and render it."
+      content="Add Milano to an existing app in eight steps: scaffold a producer folder with the CLI, declare a vocabulary, write a banner document, generate typed bindings, bridge your SwiftUI, Compose, or React Native views, and render it."
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Ezequiel (Kimi) Aceto" />
@@ -14,15 +14,15 @@
     <meta name="theme-color" content="#1d151b" media="(prefers-color-scheme: dark)" />
     <meta name="color-scheme" content="light dark" />
     <link rel="canonical" href="https://get-milano.dev/getting-started/" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="icon" href="../favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" sizes="180x180" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://get-milano.dev/getting-started/" />
     <meta property="og:site_name" content="Milano" />
-    <meta property="og:title" content="Getting started with Milano on iOS" />
+    <meta property="og:title" content="Getting started with Milano" />
     <meta
       property="og:description"
-      content="From an empty folder to a banner rendered by your own SwiftUI views, with the Milano CLI doing the checking."
+      content="From an empty folder to a banner rendered by your own SwiftUI, Compose, or React Native views, with the Milano CLI doing the checking."
     />
     <meta property="og:image" content="https://get-milano.dev/og-cover.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -32,12 +32,12 @@
       href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Fragment+Mono&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
     <header>
       <div class="shell">
-        <a class="wordmark" href="/"><img src="/get-milano.png" alt="" width="22" height="22" />Milano<span class="dot">.</span></a>
+        <a class="wordmark" href="/"><img src="../get-milano.png" alt="" width="22" height="22" />Milano<span class="dot">.</span></a>
         <nav aria-label="Main">
           <a href="/getting-started/">Getting started</a>
           <a href="/specs/">Specs</a>
@@ -51,401 +51,697 @@
     <main>
       <article class="guide rail">
         <div class="shell">
-          <div class="eyebrow">// tutorial · iOS · about thirty minutes</div>
+          <nav class="guide-nav" aria-label="Steps">
+            <div class="label">STEPS</div>
+            <ol>
+              <li><a href="#step-1">Start the producer folder</a></li>
+              <li><a href="#step-2">Declare the vocabulary</a></li>
+              <li><a href="#step-3">Write the banner</a></li>
+              <li><a href="#step-4">Generate the bindings</a></li>
+              <li><a href="#step-5">Add the SDK and the producer files to the app</a></li>
+              <li><a href="#step-6">Bridge your views</a></li>
+              <li><a href="#step-7">Create the engine and show the banner</a></li>
+              <li><a href="#step-8">Change the banner</a></li>
+            </ol>
+            <div class="plain"><a href="#next">Where next</a></div>
+          </nav>
+
+          <div class="guide-content">
+          <div class="eyebrow">// tutorial · <span data-platform-name>iOS · SwiftUI</span></div>
           <h1>Add Milano to an app you already have.</h1>
           <p class="lede">
-            You will end with a promotional banner, an image, a title, a line of copy, and a button,
-            described in a JSON document and rendered by your own SwiftUI views. The document is
-            checked by the same gate the app runs, so what passes on your machine renders on the
-            device, and changing the banner later means publishing a new document, not a new build.
+            A promotional banner, an image, a title, a line of copy, and a button, described in a JSON
+            document and rendered by your own views. The document is checked by the same gate the app
+            runs, so what passes on your machine renders on the device, and changing the banner later
+            means editing a document, not app code.
           </p>
+          <div class="pills">
+            <span class="pill">Node 20+ for the CLI</span>
+            <span class="pill">about 30 minutes</span>
+            <span class="pill">SDK 2.0</span>
+          </div>
+          <p class="pick">Your app is built with</p>
+          <div class="platform-switch" role="tablist" aria-label="Your app"><button type="button" role="tab" data-platform="swiftui" aria-selected="true">SwiftUI</button><button type="button" role="tab" data-platform="compose" aria-selected="false">Compose</button><button type="button" role="tab" data-platform="react" aria-selected="false">React Native</button></div>
 
-          <h2>What you need</h2>
-          <ul>
-            <li>An iOS app in Xcode 16 or newer, on Swift 6.</li>
-            <li>Node 20 or newer: the Milano command line, <code>@get-milano/cli</code>, runs on it. Nothing from Node ends up in the app.</li>
-            <li>Ten minutes of reading, twenty of typing. Every command below is copy-pasteable, and every file is shown whole.</li>
-          </ul>
+          <div class="build" aria-label="What you will build">
+            <div class="preview" aria-hidden="true">
+              <div class="preview-image">Image · summer.jpg</div>
+              <div class="preview-title">Summer sale, Ada</div>
+              <div class="preview-body">Twenty percent off every espresso machine until Sunday.</div>
+              <span class="preview-button">See the offer</span>
+            </div>
+            <ul>
+              <li>A <strong>producer folder</strong> the CLI scaffolds, with the vocabulary and the documents, checked by <code>npm run check</code>.</li>
+              <li>A <strong>vocabulary</strong> of four components and one action, and <strong>typed bindings</strong> generated from it.</li>
+              <li>Four <strong>renderers</strong> mapping the document onto your <span data-platform-name>SwiftUI</span> components, and one engine that hosts the banner.</li>
+              <li>A banner you change by <strong>editing a document</strong>, with the app code untouched.</li>
+            </ul>
+          </div>
+
           <p>
             Two roles appear in the steps. The <strong>producer</strong> writes the vocabulary and the documents;
             the <strong>app</strong> registers a view per vocabulary type and renders whatever passes the gate.
-            In a small team both are you, and the folder layout below keeps them apart anyway, because the
-            documents will outlive any one build of the app.
+            In a small team both are you, and the folder layout keeps them apart anyway, because the
+            documents will outlive any one build of the app. Steps 1 to 3 and 8 are the producer's and do
+            not depend on the platform; steps 4 to 7 follow the platform you picked.
           </p>
 
-          <h2><span class="step">1.</span>Start the producer folder</h2>
-          <p>
-            Inside the app's repository, next to the Xcode project, let the CLI scaffold a folder for the
-            documents:
-          </p>
-          <pre><code class="sh">cd MyApp
-npx @get-milano/cli init milano --name promo
-cd milano &amp;&amp; npm install &amp;&amp; npm run check</code></pre>
-          <p>
-            <code>milano init</code> writes a working producer setup and <code>npm run check</code> proves
-            it: the schema for your editor is regenerated and every document is validated with the gate the
-            engines run. The folder contains:
-          </p>
-          <table>
-            <tr><th>File</th><th>What it is</th></tr>
-            <tr><td><code>vocabulary.json</code></td><td>The contract between producer and app: component types, their properties and events, the custom actions.</td></tr>
-            <tr><td><code>documents/welcome.json</code></td><td>A first document using the starter vocabulary. You will add the banner next to it.</td></tr>
-            <tr><td><code>documents.schema.json</code>, <code>.vscode/settings.json</code></td><td>The document schema specialized to your vocabulary, and the editor settings that point at it, so typos get red squiggles as you type.</td></tr>
-            <tr><td><code>package.json</code></td><td><code>validate</code>, <code>schema</code>, and <code>check</code> scripts running the CLI.</td></tr>
-            <tr><td><code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>.claude/skills/</code></td><td>The authoring rules for an AI agent working in the folder, and the instruction to run the check after every change.</td></tr>
-          </table>
+          <section class="step" id="step-1">
+            <div class="step-head"><span class="badge">1</span><h2>Start the producer folder</h2></div>
 
-          <h2><span class="step">2.</span>Declare the vocabulary</h2>
-          <p>
-            The vocabulary names what documents may use. The banner needs a column, text, an image, and a
-            button, plus one action for the button to request. Replace <code>vocabulary.json</code> with:
-          </p>
-          <div class="file">milano/vocabulary.json</div>
-          <pre><code class="json">{
-  &quot;milano&quot;: &quot;2.0.0&quot;,
-  &quot;name&quot;: &quot;promo&quot;,
-  &quot;version&quot;: &quot;1.0.0&quot;,
-  &quot;components&quot;: {
-    &quot;Column&quot;: { &quot;children&quot;: true },
-    &quot;Text&quot;: {
-      &quot;properties&quot;: {
-        &quot;text&quot;: &quot;string&quot;,
-        &quot;role&quot;: { &quot;enum&quot;: [&quot;title&quot;, &quot;body&quot;] }
+            <p>Inside the app's repository, next to the project, let the CLI scaffold a folder for the documents:</p>
+            <figure class="code"><figcaption><span class="lang">Terminal</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="prompt">$ </span>cd MyApp
+<span class="prompt">$ </span>npx @get-milano/cli init milano --name promo
+<span class="prompt">$ </span>cd milano &amp;&amp; npm install &amp;&amp; npm run check</code></pre></figure>
+            <p><code>milano init</code> writes a working producer setup and <code>npm run check</code> proves it: the schema for your editor is regenerated and every document is validated with the gate the engines run. The folder contains:</p>
+            <table>
+              <tr><th>File</th><th>What it is</th></tr>
+              <tr><td><code>vocabulary.json</code></td><td>The contract between producer and app: component types, their properties and events, the custom actions.</td></tr>
+              <tr><td><code>documents/welcome.json</code></td><td>A first document using the starter vocabulary. The banner goes next to it.</td></tr>
+              <tr><td><code>documents.schema.json</code>, <code>.vscode/settings.json</code></td><td>The document schema specialized to your vocabulary, and the editor settings pointing at it, so typos get red squiggles as you type.</td></tr>
+              <tr><td><code>package.json</code></td><td><code>validate</code>, <code>schema</code>, and <code>check</code> scripts running the CLI.</td></tr>
+              <tr><td><code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>.claude/skills/</code></td><td>The authoring rules for an AI agent working in the folder, and the instruction to run the check after every change.</td></tr>
+            </table>
+            <p>These files are what the app will bundle in step 5: the vocabulary it registers renderers for, and the documents it renders. They stay in <code>milano/</code>, and the app reads them from there.</p>
+          </section>
+
+          <section class="step" id="step-2">
+            <div class="step-head"><span class="badge">2</span><h2>Declare the vocabulary</h2></div>
+
+            <p>The vocabulary names what documents may use. The banner needs a column, text, an image, and a button, plus one action for the button to request. Replace <code>vocabulary.json</code> with:</p>
+            <figure class="code"><figcaption><span class="lang">JSON</span><span class="path">milano/vocabulary.json</span><button type="button" class="copy">Copy</button></figcaption><pre><code>{
+  <span class="tk-key">&quot;milano&quot;</span>: <span class="tk-str">&quot;2.0.0&quot;</span>,
+  <span class="tk-key">&quot;name&quot;</span>: <span class="tk-str">&quot;promo&quot;</span>,
+  <span class="tk-key">&quot;version&quot;</span>: <span class="tk-str">&quot;1.0.0&quot;</span>,
+  <span class="tk-key">&quot;components&quot;</span>: {
+    <span class="tk-key">&quot;Column&quot;</span>: { <span class="tk-key">&quot;children&quot;</span>: <span class="tk-kw">true</span> },
+    <span class="tk-key">&quot;Text&quot;</span>: {
+      <span class="tk-key">&quot;properties&quot;</span>: {
+        <span class="tk-key">&quot;text&quot;</span>: <span class="tk-str">&quot;string&quot;</span>,
+        <span class="tk-key">&quot;role&quot;</span>: { <span class="tk-key">&quot;enum&quot;</span>: [<span class="tk-str">&quot;title&quot;</span>, <span class="tk-str">&quot;body&quot;</span>] }
       }
     },
-    &quot;Image&quot;: {
-      &quot;properties&quot;: {
-        &quot;url&quot;: &quot;string&quot;,
-        &quot;height&quot;: &quot;int?&quot;,
-        &quot;cornerRadius&quot;: &quot;int?&quot;
+    <span class="tk-key">&quot;Image&quot;</span>: {
+      <span class="tk-key">&quot;properties&quot;</span>: {
+        <span class="tk-key">&quot;url&quot;</span>: <span class="tk-str">&quot;string&quot;</span>,
+        <span class="tk-key">&quot;height&quot;</span>: <span class="tk-str">&quot;int?&quot;</span>,
+        <span class="tk-key">&quot;cornerRadius&quot;</span>: <span class="tk-str">&quot;int?&quot;</span>
       }
     },
-    &quot;Button&quot;: {
-      &quot;properties&quot;: {
-        &quot;label&quot;: &quot;string&quot;,
-        &quot;enabled&quot;: &quot;bool&quot;
+    <span class="tk-key">&quot;Button&quot;</span>: {
+      <span class="tk-key">&quot;properties&quot;</span>: {
+        <span class="tk-key">&quot;label&quot;</span>: <span class="tk-str">&quot;string&quot;</span>,
+        <span class="tk-key">&quot;enabled&quot;</span>: <span class="tk-str">&quot;bool&quot;</span>
       },
-      &quot;events&quot;: { &quot;tap&quot;: null }
+      <span class="tk-key">&quot;events&quot;</span>: { <span class="tk-key">&quot;tap&quot;</span>: <span class="tk-kw">null</span> }
     }
   },
-  &quot;actions&quot;: {
-    &quot;openUrl&quot;: { &quot;parameters&quot;: { &quot;url&quot;: &quot;string&quot; } }
+  <span class="tk-key">&quot;actions&quot;</span>: {
+    <span class="tk-key">&quot;openUrl&quot;</span>: { <span class="tk-key">&quot;parameters&quot;</span>: { <span class="tk-key">&quot;url&quot;</span>: <span class="tk-str">&quot;string&quot;</span> } }
   }
-}</code></pre>
-          <p>
-            Each property has a type: <code>"int?"</code> is an optional integer, the <code>enum</code> is a
-            closed set of values, and <code>"tap": null</code> declares an event with no payload. The action
-            takes one parameter. Run <code>npm run check</code> again: the schema follows the new vocabulary,
-            and <code>welcome.json</code> still validates, since everything it used is still declared.
-          </p>
+}</code></pre></figure>
+            <p>Each property has a type: <code>"int?"</code> is an optional integer, the <code>enum</code> is a closed set of values, and <code>"tap": null</code> declares an event with no payload. The action takes one parameter. Run <code>npm run check</code> again: the schema follows the new vocabulary, and <code>welcome.json</code> still validates, since everything it used is still declared.</p>
+          </section>
 
-          <h2><span class="step">3.</span>Write the banner</h2>
-          <div class="file">milano/documents/banner.json</div>
-          <pre><code class="json">{
-  &quot;version&quot;: &quot;2.0.0&quot;,
-  &quot;vocabulary&quot;: { &quot;name&quot;: &quot;promo&quot;, &quot;min&quot;: &quot;1.0.0&quot; },
-  &quot;context&quot;: { &quot;userName&quot;: &quot;string&quot; },
-  &quot;root&quot;: {
-    &quot;type&quot;: &quot;Column&quot;,
-    &quot;id&quot;: &quot;banner&quot;,
-    &quot;children&quot;: [
+          <section class="step" id="step-3">
+            <div class="step-head"><span class="badge">3</span><h2>Write the banner</h2></div>
+
+            <figure class="code"><figcaption><span class="lang">JSON</span><span class="path">milano/documents/banner.json</span><button type="button" class="copy">Copy</button></figcaption><pre><code>{
+  <span class="tk-key">&quot;version&quot;</span>: <span class="tk-str">&quot;2.0.0&quot;</span>,
+  <span class="tk-key">&quot;vocabulary&quot;</span>: { <span class="tk-key">&quot;name&quot;</span>: <span class="tk-str">&quot;promo&quot;</span>, <span class="tk-key">&quot;min&quot;</span>: <span class="tk-str">&quot;1.0.0&quot;</span> },
+  <span class="tk-key">&quot;context&quot;</span>: { <span class="tk-key">&quot;userName&quot;</span>: <span class="tk-str">&quot;string&quot;</span> },
+  <span class="tk-key">&quot;root&quot;</span>: {
+    <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Column&quot;</span>,
+    <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;banner&quot;</span>,
+    <span class="tk-key">&quot;children&quot;</span>: [
       {
-        &quot;type&quot;: &quot;Image&quot;,
-        &quot;properties&quot;: {
-          &quot;url&quot;: &quot;https://images.example.com/summer.jpg&quot;,
-          &quot;height&quot;: 160,
-          &quot;cornerRadius&quot;: 12
+        <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Image&quot;</span>,
+        <span class="tk-key">&quot;properties&quot;</span>: {
+          <span class="tk-key">&quot;url&quot;</span>: <span class="tk-str">&quot;https://images.example.com/summer.jpg&quot;</span>,
+          <span class="tk-key">&quot;height&quot;</span>: <span class="tk-num">160</span>,
+          <span class="tk-key">&quot;cornerRadius&quot;</span>: <span class="tk-num">12</span>
         }
       },
       {
-        &quot;type&quot;: &quot;Text&quot;,
-        &quot;properties&quot;: {
-          &quot;text&quot;: { &quot;$expr&quot;: &quot;concat(&#x27;Summer sale, &#x27;, context.userName)&quot; },
-          &quot;role&quot;: &quot;title&quot;
+        <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Text&quot;</span>,
+        <span class="tk-key">&quot;properties&quot;</span>: {
+          <span class="tk-key">&quot;text&quot;</span>: { <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;concat(&#x27;Summer sale, &#x27;, context.userName)&quot;</span> },
+          <span class="tk-key">&quot;role&quot;</span>: <span class="tk-str">&quot;title&quot;</span>
         }
       },
       {
-        &quot;type&quot;: &quot;Text&quot;,
-        &quot;properties&quot;: {
-          &quot;text&quot;: &quot;Twenty percent off every espresso machine until Sunday.&quot;,
-          &quot;role&quot;: &quot;body&quot;
+        <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Text&quot;</span>,
+        <span class="tk-key">&quot;properties&quot;</span>: {
+          <span class="tk-key">&quot;text&quot;</span>: <span class="tk-str">&quot;Twenty percent off every espresso machine until Sunday.&quot;</span>,
+          <span class="tk-key">&quot;role&quot;</span>: <span class="tk-str">&quot;body&quot;</span>
         }
       },
       {
-        &quot;type&quot;: &quot;Button&quot;,
-        &quot;id&quot;: &quot;cta&quot;,
-        &quot;properties&quot;: { &quot;label&quot;: &quot;See the offer&quot;, &quot;enabled&quot;: true },
-        &quot;on&quot;: {
-          &quot;tap&quot;: [ { &quot;action&quot;: &quot;openUrl&quot;, &quot;url&quot;: &quot;https://shop.example.com/sale&quot; } ]
+        <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Button&quot;</span>,
+        <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;cta&quot;</span>,
+        <span class="tk-key">&quot;properties&quot;</span>: { <span class="tk-key">&quot;label&quot;</span>: <span class="tk-str">&quot;See the offer&quot;</span>, <span class="tk-key">&quot;enabled&quot;</span>: <span class="tk-kw">true</span> },
+        <span class="tk-key">&quot;on&quot;</span>: {
+          <span class="tk-key">&quot;tap&quot;</span>: [ { <span class="tk-key">&quot;action&quot;</span>: <span class="tk-str">&quot;openUrl&quot;</span>, <span class="tk-key">&quot;url&quot;</span>: <span class="tk-str">&quot;https://shop.example.com/sale&quot;</span> } ]
         }
       }
     ]
   },
-  &quot;metadata&quot;: { &quot;campaign&quot;: &quot;summer-2026&quot; }
-}</code></pre>
-          <p>
-            Three things to notice. The title is an <strong>expression</strong>: the <code>$expr</code>
-            wrapper reads <code>context.userName</code>, a value the app injects, and the document declares
-            that it needs it under <code>context</code>. The button's <code>on.tap</code> binds the event to
-            the <code>openUrl</code> action with its parameter. And <code>vocabulary.min</code> says which
-            vocabulary the document was written for, so an app holding an older one fails the build with a
-            typed error instead of rendering the wrong thing.
-          </p>
-          <pre><code class="sh">npm run check
-documents/banner.json: valid
-documents/welcome.json: valid</code></pre>
-          <p>
-            Try breaking it: change the title's <code>role</code> to <code>"headline"</code> and run the
-            check. The gate answers with the rule it applied, the node (by path, since that node has no
-            <code>id</code>), and what it expected:
-          </p>
-          <pre><code class="sh">documents/banner.json: SchemaViolation: schema violation (property-type) at root/children[1]: expected enum, found string</code></pre>
-          <p>
-            That message is the same one the app would report, which is the point of running it here first.
-            Put the <code>role</code> back.
-          </p>
+  <span class="tk-key">&quot;metadata&quot;</span>: { <span class="tk-key">&quot;campaign&quot;</span>: <span class="tk-str">&quot;summer-2026&quot;</span> }
+}</code></pre></figure>
+            <p>Three things to notice. The title is an <strong>expression</strong>: the <code>$expr</code> wrapper reads <code>context.userName</code>, a value the app injects, and the document declares that it needs it under <code>context</code>. The button's <code>on.tap</code> binds the event to the <code>openUrl</code> action with its parameter. And <code>vocabulary.min</code> says which vocabulary the document was written for, so an app holding an older one fails the build with a typed error instead of rendering the wrong thing.</p>
+            <figure class="code"><figcaption><span class="lang">Terminal</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="prompt">$ </span>npm run check
+<span class="out">documents/banner.json: valid</span>
+<span class="out">documents/welcome.json: valid</span></code></pre></figure>
+            <div class="callout">
+              <div class="title">Try it</div>
+              <p>Change the title's <code>role</code> to <code>"headline"</code> and run the check. The gate answers with the rule it applied, the node (by path, since that node has no <code>id</code>), and what it expected:</p>
+              <figure class="code"><figcaption><span class="lang">Terminal</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="prompt">$ </span>npm run check
+<span class="err">documents/banner.json: SchemaViolation: schema violation (property-type) at root/children[1]: expected enum, found string</span></code></pre></figure>
+              <p>That is the same message the app would report, which is the point of running it here first. Put the <code>role</code> back.</p>
+            </div>
+            <p>Everything so far is the producer's side, and it is the same whatever the app is built with. The next four steps are the app's side, in the platform picked at the top of the page.</p>
+          </section>
 
-          <h2><span class="step">4.</span>Generate the Swift bindings</h2>
-          <p>
-            The vocabulary is machine-readable, so the app does not have to read properties by string. One
-            command turns it into typed Swift, written straight into the app's source tree:
-          </p>
-          <pre><code class="sh">npx milano bindings vocabulary.json \
+          <section class="step" id="step-4">
+            <div class="step-head"><span class="badge">4</span><h2>Generate the bindings</h2></div>
+
+            <p>The vocabulary is machine-readable, so the app does not have to read properties by string. One command turns it into typed code, written straight into the app's source tree:</p>
+            <div class="tab" data-platform="swiftui"><figure class="code"><figcaption><span class="lang">Terminal</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="prompt">$ </span>npx milano bindings vocabulary.json \
     --swift-prefix Promo \
-    --swift-out ../MyApp/Milano/PromoBindings.swift</code></pre>
-          <p>
-            The file holds one wrapper per component (<code>PromoTextNode</code> with <code>text</code> and
-            <code>role</code>, <code>PromoImageNode</code>, <code>PromoButtonNode</code> with
-            <code>emitTap()</code>), a Swift enum per declared enum (<code>PromoTextRole</code>), an
-            exhaustive <code>PromoAction</code> with an <code>unrecognized</code> case, and
-            <code>PromoVocabulary.assertMatches</code>. A property the vocabulary declares non-optional is a
-            non-optional Swift property: the gate guarantees it is there. Commit the file, and regenerate it
-            whenever the vocabulary changes; the compiler then lists every place in the app the change
-            touches.
-          </p>
+    --swift-out ../MyApp/Milano/PromoBindings.swift</code></pre></figure>
+            <p>The file holds one wrapper per component (<code>PromoTextNode</code> with <code>text</code> and <code>role</code>, <code>PromoImageNode</code>, <code>PromoButtonNode</code> with <code>emitTap()</code>), a Swift enum per declared enum (<code>PromoTextRole</code>), an exhaustive <code>PromoAction</code> with an <code>unrecognized</code> case, and <code>PromoVocabulary.assertMatches</code>.</p></div>
+<div class="tab" data-platform="compose" hidden><figure class="code"><figcaption><span class="lang">Terminal</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="prompt">$ </span>npx milano bindings vocabulary.json \
+    --kotlin-package com.example.myapp.milano --kotlin-prefix Promo \
+    --kotlin-out ../app/src/main/kotlin/com/example/myapp/milano/PromoBindings.kt</code></pre></figure>
+            <p>The file holds one wrapper per component (<code>PromoTextNode</code> with <code>text</code> and <code>role</code>, <code>PromoImageNode</code>, <code>PromoButtonNode</code> with <code>emitTap()</code>), an enum class per declared enum (<code>PromoTextRole</code>), a sealed <code>PromoAction</code> with <code>OpenUrl</code> and <code>Unrecognized</code> and a <code>from(action)</code> decoder, and <code>PromoVocabulary.assertMatches</code>.</p></div>
+<div class="tab" data-platform="react" hidden><figure class="code"><figcaption><span class="lang">Terminal</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="prompt">$ </span>npx milano bindings vocabulary.json \
+    --ts-prefix Promo \
+    --ts-out ../src/milano/bindings.ts</code></pre></figure>
+            <p>The file holds one wrapper per component (<code>PromoTextNode</code> with <code>text</code> and <code>role</code>, <code>PromoImageNode</code>, <code>PromoButtonNode</code> with <code>emitTap()</code>), a string-literal union per declared enum (<code>PromoTextRole</code>), a discriminated <code>PromoAction</code> union with a <code>promoAction(action)</code> decoder, and <code>PromoVocabulary.assertMatches</code>. It imports only <code>@get-milano/core</code>.</p></div>
+            <p>A property the vocabulary declares non-optional is a non-optional property in the generated code: the gate guarantees it is there. Commit the file, and regenerate it whenever the vocabulary changes; the compiler then lists every place in the app the change touches.</p>
+          </section>
 
-          <h2><span class="step">5.</span>Add the SDK to the app</h2>
-          <p>
-            In Xcode, File, Add Package Dependencies, and enter the repository URL; choose "Up to Next
-            Major" from <code>2.0.0</code> and add the <code>MilanoSDK</code> product to the app target. In a
-            <code>Package.swift</code> it is:
-          </p>
-          <pre><code class="swift">dependencies: [
-    .package(url: &quot;https://github.com/get-milano/sdk.git&quot;, from: &quot;2.0.0&quot;)
-]</code></pre>
-          <p>
-            A tagged release resolves to a prebuilt, signed <code>MilanoSDK.xcframework</code>. Then add
-            <code>milano/vocabulary.json</code> and <code>milano/documents/banner.json</code> to the app
-            target as bundle resources (drag them into the project and tick the target), so the app can read
-            them until you serve them from a server in step 8.
-          </p>
-
-          <h2><span class="step">6.</span>Bridge your views</h2>
-          <p>
-            A renderer is one function: node in, view out. Each one reads the typed node and returns a view
-            the app already has, or plain SwiftUI, as here. Milano never draws anything; this file is where
-            your design system meets the document.
-          </p>
-          <div class="file">MyApp/Milano/PromoBridge.swift</div>
-          <pre><code class="swift">import MilanoSDK
-import SwiftUI
-
-/// The bridge: one renderer per vocabulary type, each mapping a typed node
-/// onto a view the app already has. Milano draws nothing itself.
-enum PromoBridge {
-    static func registry() -&gt; MilanoRegistry {
-        var registry = MilanoRegistry()
-        registry.register(ColumnRenderer(), for: &quot;Column&quot;)
-        registry.register(TextRenderer(), for: &quot;Text&quot;)
-        registry.register(ImageRenderer(), for: &quot;Image&quot;)
-        registry.register(ButtonRenderer(), for: &quot;Button&quot;)
-        return registry
-    }
-}
-
-final class ColumnRenderer: MilanoRenderer {
-    func render(_ node: MilanoNode) -&gt; AnyView {
-        AnyView(
-            VStack(alignment: .leading, spacing: 12) {
-                ForEach(node.children) { $0 }
-            }
-            .padding(16)
-        )
-    }
-}
-
-final class TextRenderer: MilanoRenderer {
-    func render(_ node: MilanoNode) -&gt; AnyView {
-        let text = PromoTextNode(node)
-        switch text.role {
-        case .title:
-            return AnyView(Text(text.text).font(.title2.bold()))
-        case .body:
-            return AnyView(Text(text.text).font(.body).foregroundStyle(.secondary))
+          <section class="step" id="step-5">
+            <div class="step-head"><span class="badge">5</span><h2>Add the SDK and the producer files to the app</h2></div>
+<div class="tab" data-platform="swiftui"><p>In Xcode, File, Add Package Dependencies, and enter the repository URL; choose "Up to Next Major" from <code>2.0.0</code> and add the <code>MilanoSDK</code> product to the app target. In a <code>Package.swift</code> it is:</p>
+            <figure class="code"><figcaption><span class="lang">Swift</span><span class="path">Package.swift</span><button type="button" class="copy">Copy</button></figcaption><pre><code>dependencies: [
+    .package(url: <span class="tk-str">&quot;https://github.com/get-milano/sdk.git&quot;</span>, from: <span class="tk-str">&quot;2.0.0&quot;</span>)
+]</code></pre></figure>
+            <p>A tagged release resolves to a prebuilt, signed <code>MilanoSDK.xcframework</code>. Then add <code>milano/vocabulary.json</code> and <code>milano/documents/banner.json</code> to the app target: drag them into the project navigator, tick the target, and leave "Copy items if needed" unchecked, so the project references the files where the CLI wrote them. Xcode copies them into the bundle at build time, and an edited document is in the next build.</p></div>
+<div class="tab" data-platform="compose" hidden><p>The engine is on GitHub Packages, whose Maven registry needs a token with <code>read:packages</code> even for public artifacts (put <code>gpr.user</code> and <code>gpr.token</code> in <code>~/.gradle/gradle.properties</code>). In the app module's <code>build.gradle.kts</code>, the dependencies and a copy task that carries the producer folder's files into the assets before every build:</p>
+            <figure class="code"><figcaption><span class="lang">Gradle</span><span class="path">app/build.gradle.kts</span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-kw">repositories</span> {
+    <span class="tk-kw">maven</span>(<span class="tk-str">&quot;https://maven.pkg.github.com/get-milano/sdk&quot;</span>) {
+        <span class="tk-kw">credentials</span> {
+            username = providers.gradleProperty(<span class="tk-str">&quot;gpr.user&quot;</span>).get()
+            password = providers.gradleProperty(<span class="tk-str">&quot;gpr.token&quot;</span>).get()
         }
     }
 }
 
-final class ImageRenderer: MilanoRenderer {
-    func render(_ node: MilanoNode) -&gt; AnyView {
-        let image = PromoImageNode(node)
-        return AnyView(
-            AsyncImage(url: URL(string: image.url)) { phase in
-                if case .success(let loaded) = phase {
-                    loaded.resizable().scaledToFill()
-                } else {
-                    Color.gray.opacity(0.2)
-                }
+<span class="tk-kw">dependencies</span> {
+    <span class="tk-kw">implementation</span>(<span class="tk-str">&quot;dev.get-milano:engine-compose:2.0.0&quot;</span>)
+    <span class="tk-kw">implementation</span>(<span class="tk-str">&quot;io.coil-kt:coil-compose:2.7.0&quot;</span>)   <span class="tk-cm">// the image loader the bridge below uses</span>
+}
+
+<span class="tk-cm">// The producer folder&#x27;s files travel with the app: copied into the assets</span>
+<span class="tk-cm">// before every build, so an edited document is in the next build.</span>
+<span class="tk-kw">val</span> copyMilanoDocuments <span class="tk-kw">by</span> <span class="tk-kw">tasks</span>.registering(<span class="tk-type">Copy</span>::class) {
+    <span class="tk-kw">from</span>(<span class="tk-str">&quot;../milano&quot;</span>) { <span class="tk-kw">include</span>(<span class="tk-str">&quot;vocabulary.json&quot;</span>, <span class="tk-str">&quot;documents/banner.json&quot;</span>) }
+    <span class="tk-kw">into</span>(<span class="tk-str">&quot;src/main/assets/milano&quot;</span>)
+}
+<span class="tk-kw">tasks</span>.named(<span class="tk-str">&quot;preBuild&quot;</span>) { <span class="tk-kw">dependsOn</span>(copyMilanoDocuments) }</code></pre></figure>
+            <p>Without a token, the release page carries <code>engine-compose-android-2.0.0.aar</code> to drop into <code>libs/</code>, and a checkout of the SDK can be consumed from source with <code>includeBuild</code>. The copy task keeps the app's <code>assets/milano/</code> equal to the two files in <code>milano/</code>, so an edited document is in the next build and nothing is duplicated by hand.</p></div>
+<div class="tab" data-platform="react" hidden><figure class="code"><figcaption><span class="lang">Terminal</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="prompt">$ </span>npm install @get-milano/core @get-milano/react</code></pre></figure>
+            <p>Two packages and nothing native: no autolinking, no pod install, because Milano draws nothing. The same two serve React on the web; only the components in the bridge change. The app imports the vocabulary and the banner straight from <code>milano/</code> as JSON modules (<code>resolveJsonModule</code>), which is fine for this document since all its numbers are integers.</p>
+            <div class="callout note">
+              <div class="title">Doubles in documents</div>
+              <p>Milano distinguishes <code>int</code> from <code>double</code>, and <code>JSON.parse</code> does not: an imported <code>2.0</code> becomes <code>2</code>. Once a document carries doubles, bundle it as <strong>text</strong> (the React Native sample's <code>scripts/bundle-documents.mjs</code> shows how) and hand the string to the engine.</p>
+            </div></div>
+          </section>
+
+          <section class="step" id="step-6">
+            <div class="step-head"><span class="badge">6</span><h2>Bridge your views</h2></div>
+
+            <p>A renderer is one function: node in, view out. Each one reads the typed node and returns a view the app already has, or the platform's plain components, as here. Milano never draws anything; this file is where your design system meets the document.</p>
+            <div class="tab" data-platform="swiftui"><figure class="code"><figcaption><span class="lang">Swift</span><span class="path">MyApp/Milano/PromoBridge.swift</span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-kw">import</span> <span class="tk-type">MilanoSDK</span>
+<span class="tk-kw">import</span> <span class="tk-type">SwiftUI</span>
+
+<span class="tk-cm">/// The bridge: one renderer per vocabulary type, each mapping a typed node</span>
+<span class="tk-cm">/// onto a view the app already has. Milano draws nothing itself.</span>
+<span class="tk-kw">enum</span> <span class="tk-type">PromoBridge</span> {
+    <span class="tk-kw">static</span> <span class="tk-kw">func</span> registry() -&gt; <span class="tk-type">MilanoRegistry</span> {
+        <span class="tk-kw">var</span> registry = <span class="tk-type">MilanoRegistry</span>()
+        registry.register(<span class="tk-type">ColumnRenderer</span>(), for: <span class="tk-str">&quot;Column&quot;</span>)
+        registry.register(<span class="tk-type">TextRenderer</span>(), for: <span class="tk-str">&quot;Text&quot;</span>)
+        registry.register(<span class="tk-type">ImageRenderer</span>(), for: <span class="tk-str">&quot;Image&quot;</span>)
+        registry.register(<span class="tk-type">ButtonRenderer</span>(), for: <span class="tk-str">&quot;Button&quot;</span>)
+        <span class="tk-kw">return</span> registry
+    }
+}
+
+<span class="tk-kw">final</span> <span class="tk-kw">class</span> <span class="tk-type">ColumnRenderer</span>: <span class="tk-type">MilanoRenderer</span> {
+    <span class="tk-kw">func</span> render(_ node: <span class="tk-type">MilanoNode</span>) -&gt; <span class="tk-type">AnyView</span> {
+        <span class="tk-type">AnyView</span>(
+            <span class="tk-type">VStack</span>(alignment: .leading, spacing: <span class="tk-num">12</span>) {
+                <span class="tk-type">ForEach</span>(node.children) { $0 }
             }
-            .frame(height: image.height.map(CGFloat.init))
-            .clipShape(RoundedRectangle(cornerRadius: CGFloat(image.cornerRadius ?? 0)))
+            .padding(<span class="tk-num">16</span>)
         )
     }
 }
 
-final class ButtonRenderer: MilanoRenderer {
-    func render(_ node: MilanoNode) -&gt; AnyView {
-        let button = PromoButtonNode(node)
-        return AnyView(
-            Button(button.label) { button.emitTap() }
+<span class="tk-kw">final</span> <span class="tk-kw">class</span> <span class="tk-type">TextRenderer</span>: <span class="tk-type">MilanoRenderer</span> {
+    <span class="tk-kw">func</span> render(_ node: <span class="tk-type">MilanoNode</span>) -&gt; <span class="tk-type">AnyView</span> {
+        <span class="tk-kw">let</span> text = <span class="tk-type">PromoTextNode</span>(node)
+        <span class="tk-kw">switch</span> text.role {
+        <span class="tk-kw">case</span> .title:
+            <span class="tk-kw">return</span> <span class="tk-type">AnyView</span>(<span class="tk-type">Text</span>(text.text).font(.title2.bold()))
+        <span class="tk-kw">case</span> .body:
+            <span class="tk-kw">return</span> <span class="tk-type">AnyView</span>(<span class="tk-type">Text</span>(text.text).font(.body).foregroundStyle(.secondary))
+        }
+    }
+}
+
+<span class="tk-kw">final</span> <span class="tk-kw">class</span> <span class="tk-type">ImageRenderer</span>: <span class="tk-type">MilanoRenderer</span> {
+    <span class="tk-kw">func</span> render(_ node: <span class="tk-type">MilanoNode</span>) -&gt; <span class="tk-type">AnyView</span> {
+        <span class="tk-kw">let</span> image = <span class="tk-type">PromoImageNode</span>(node)
+        <span class="tk-kw">return</span> <span class="tk-type">AnyView</span>(
+            <span class="tk-type">AsyncImage</span>(url: <span class="tk-type">URL</span>(string: image.url)) { phase <span class="tk-kw">in</span>
+                <span class="tk-kw">if</span> <span class="tk-kw">case</span> .success(<span class="tk-kw">let</span> loaded) = phase {
+                    loaded.resizable().scaledToFill()
+                } <span class="tk-kw">else</span> {
+                    <span class="tk-type">Color</span>.gray.opacity(<span class="tk-num">0</span>.<span class="tk-num">2</span>)
+                }
+            }
+            .frame(height: image.height.map(<span class="tk-type">CGFloat</span>.init))
+            .clipShape(<span class="tk-type">RoundedRectangle</span>(cornerRadius: <span class="tk-type">CGFloat</span>(image.cornerRadius ?? <span class="tk-num">0</span>)))
+        )
+    }
+}
+
+<span class="tk-kw">final</span> <span class="tk-kw">class</span> <span class="tk-type">ButtonRenderer</span>: <span class="tk-type">MilanoRenderer</span> {
+    <span class="tk-kw">func</span> render(_ node: <span class="tk-type">MilanoNode</span>) -&gt; <span class="tk-type">AnyView</span> {
+        <span class="tk-kw">let</span> button = <span class="tk-type">PromoButtonNode</span>(node)
+        <span class="tk-kw">return</span> <span class="tk-type">AnyView</span>(
+            <span class="tk-type">Button</span>(button.label) { button.emitTap() }
                 .buttonStyle(.borderedProminent)
                 .disabled(!button.enabled)
         )
     }
-}</code></pre>
-          <p>
-            <code>node.children</code> are the column's materialized children, already views: the container
-            only places them. The button's <code>emitTap()</code> puts the event into Milano's dispatch, which
-            runs the actions the document bound to it.
-          </p>
+}</code></pre></figure></div>
+<div class="tab" data-platform="compose" hidden><figure class="code"><figcaption><span class="lang">Kotlin</span><span class="path">app/src/main/kotlin/com/example/myapp/milano/PromoBridge.kt</span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-kw">package</span> com.example.myapp.milano
 
-          <h2><span class="step">7.</span>Create the engine and show the banner</h2>
-          <p>
-            One engine per app, created once with the vocabulary and the registry, then a builder per
-            surface: the document, the context the document declared, and the handler for the actions it may
-            request.
-          </p>
-          <div class="file">MyApp/Milano/PromoBanner.swift</div>
-          <pre><code class="swift">import MilanoSDK
-import SwiftUI
+<span class="tk-kw">import</span> androidx.compose.foundation.layout.<span class="tk-type">Arrangement</span>
+<span class="tk-kw">import</span> androidx.compose.foundation.layout.<span class="tk-type">Column</span>
+<span class="tk-kw">import</span> androidx.compose.foundation.layout.fillMaxWidth
+<span class="tk-kw">import</span> androidx.compose.foundation.layout.height
+<span class="tk-kw">import</span> androidx.compose.foundation.layout.padding
+<span class="tk-kw">import</span> androidx.compose.foundation.shape.<span class="tk-type">RoundedCornerShape</span>
+<span class="tk-kw">import</span> androidx.compose.material3.<span class="tk-type">Button</span>
+<span class="tk-kw">import</span> androidx.compose.material3.<span class="tk-type">MaterialTheme</span>
+<span class="tk-kw">import</span> androidx.compose.material3.<span class="tk-type">Text</span>
+<span class="tk-kw">import</span> androidx.compose.runtime.<span class="tk-type">Composable</span>
+<span class="tk-kw">import</span> androidx.compose.runtime.key
+<span class="tk-kw">import</span> androidx.compose.ui.<span class="tk-type">Modifier</span>
+<span class="tk-kw">import</span> androidx.compose.ui.draw.clip
+<span class="tk-kw">import</span> androidx.compose.ui.layout.<span class="tk-type">ContentScale</span>
+<span class="tk-kw">import</span> androidx.compose.ui.unit.dp
+<span class="tk-kw">import</span> coil.compose.<span class="tk-type">AsyncImage</span>
+<span class="tk-kw">import</span> dev.getmilano.<span class="tk-type">MilanoNode</span>
+<span class="tk-kw">import</span> dev.getmilano.<span class="tk-type">MilanoRegistry</span>
+<span class="tk-kw">import</span> dev.getmilano.<span class="tk-type">MilanoRenderer</span>
 
-/// One engine for the whole app, created once with the vocabulary the
-/// bridge implements; every screen builds its views from it.
-enum Milano {
-    static let engine: MilanoEngine = {
-        do {
-            let engine = try MilanoEngine(
-                vocabularyJSON: resource(&quot;vocabulary&quot;),
-                registry: PromoBridge.registry())
-            // Refuses to run against a vocabulary the bindings were not generated from.
-            PromoVocabulary.assertMatches(engine)
-            return engine
-        } catch {
-            fatalError(&quot;Milano setup failed: \(error)&quot;)
+<span class="tk-cm">/**
+ * The bridge: one renderer per vocabulary type, each mapping a typed node
+ * onto a composable the app already has. Milano draws nothing itself.
+ */</span>
+<span class="tk-kw">fun</span> promoRegistry(): <span class="tk-type">MilanoRegistry</span> {
+    <span class="tk-kw">val</span> registry = <span class="tk-type">MilanoRegistry</span>()
+    registry.register(<span class="tk-str">&quot;Column&quot;</span>, <span class="tk-type">ColumnRenderer</span>)
+    registry.register(<span class="tk-str">&quot;Text&quot;</span>, <span class="tk-type">TextRenderer</span>)
+    registry.register(<span class="tk-str">&quot;Image&quot;</span>, <span class="tk-type">ImageRenderer</span>)
+    registry.register(<span class="tk-str">&quot;Button&quot;</span>, <span class="tk-type">ButtonRenderer</span>)
+    <span class="tk-kw">return</span> registry
+}
+
+<span class="tk-kw">object</span> <span class="tk-type">ColumnRenderer</span> : <span class="tk-type">MilanoRenderer</span> {
+    @<span class="tk-type">Composable</span>
+    <span class="tk-kw">override</span> <span class="tk-kw">fun</span> <span class="tk-type">Render</span>(node: <span class="tk-type">MilanoNode</span>) {
+        <span class="tk-type">Column</span>(
+            verticalArrangement = <span class="tk-type">Arrangement</span>.spacedBy(<span class="tk-num">12</span>.dp),
+            modifier = <span class="tk-type">Modifier</span>.padding(<span class="tk-num">16</span>.dp),
+        ) {
+            <span class="tk-kw">for</span> (child <span class="tk-kw">in</span> node.children) {
+                key(child.key) { child.<span class="tk-type">Render</span>() }
+            }
         }
-    }()
-
-    /// The banner from the bundled document. A document fetched from your
-    /// server is the same call with the received bytes.
-    static func bannerBuilder(document: Data = resource(&quot;banner&quot;)) -&gt; MilanoViewBuilder {
-        engine.viewBuilder(document: document)
-            .context([&quot;userName&quot;: .string(&quot;Ada&quot;)])
-            .actionHandler(handle(_:))
-            .label(&quot;banner&quot;)
-    }
-
-    /// The single funnel for custom actions. The gate proved `url` is a
-    /// string; whether it is safe to open is the app&#x27;s decision.
-    @Sendable static func handle(_ action: MilanoAction) async throws -&gt; MilanoValue? {
-        switch PromoAction(action) {
-        case .openUrl(let url):
-            guard let url = URL(string: url), url.scheme == &quot;https&quot; else { return nil }
-            await open(url)
-        case .unrecognized(let action):
-            print(&quot;unhandled action \(action.name)&quot;)
-        }
-        return nil
-    }
-
-    @MainActor private static func open(_ url: URL) {
-        UIApplication.shared.open(url)
-    }
-
-    private static func resource(_ name: String) -&gt; Data {
-        guard let url = Bundle.main.url(forResource: name, withExtension: &quot;json&quot;),
-              let data = try? Data(contentsOf: url)
-        else { fatalError(&quot;\(name).json is not in the app bundle&quot;) }
-        return data
     }
 }
 
-/// Drop it into any screen: the banner renders where this view sits.
-struct PromoBannerView: View {
-    var body: some View {
-        MilanoHost(builder: Milano.bannerBuilder()) {
-            ProgressView()
-        } failure: { _ in
-            EmptyView()   // an optional surface fails to nothing
+<span class="tk-kw">object</span> <span class="tk-type">TextRenderer</span> : <span class="tk-type">MilanoRenderer</span> {
+    @<span class="tk-type">Composable</span>
+    <span class="tk-kw">override</span> <span class="tk-kw">fun</span> <span class="tk-type">Render</span>(node: <span class="tk-type">MilanoNode</span>) {
+        <span class="tk-kw">val</span> text = <span class="tk-type">PromoTextNode</span>(node)
+        <span class="tk-kw">when</span> (text.role) {
+            <span class="tk-type">PromoTextRole</span>.<span class="tk-type">Title</span> -&gt; <span class="tk-type">Text</span>(text.text, style = <span class="tk-type">MaterialTheme</span>.typography.titleLarge)
+            <span class="tk-type">PromoTextRole</span>.<span class="tk-type">Body</span> -&gt;
+                <span class="tk-type">Text</span>(
+                    text.text,
+                    style = <span class="tk-type">MaterialTheme</span>.typography.bodyMedium,
+                    color = <span class="tk-type">MaterialTheme</span>.colorScheme.onSurfaceVariant,
+                )
         }
     }
-}</code></pre>
-          <p>
-            Put <code>PromoBannerView()</code> wherever the banner belongs, a home screen, a list header,
-            a sheet. Build and run: the image loads, the title reads "Summer sale, Ada", the button opens the
-            offer. The handler is the last capability check: the gate proved <code>url</code> is a string,
-            the app decides that only <code>https</code> leaves it. The <code>failure</code> closure is where a
-            rejected document lands; for an optional surface, nothing is the right thing to show.
-          </p>
+}
 
-          <h2><span class="step">8.</span>Change it without a release</h2>
-          <p>
-            Edit <code>banner.json</code>, new copy, a different image, a second paragraph, and run
-            <code>npm run check</code>. Nothing in the app changes. Serve the document from wherever the app
-            fetches things and hand the bytes to the same builder:
-          </p>
-          <pre><code class="swift">let (data, _) = try await URLSession.shared.data(from: bannerURL)
-let builder = Milano.bannerBuilder(document: data)</code></pre>
-          <p>
-            Keep the previous version of every document on the server; rolling back is serving the old
-            file. When the vocabulary itself changes (a new component, a new property), bump its version
-            and let the CLI say whether the bump is right before you publish:
-          </p>
-          <pre><code class="sh">npx milano diff vocabulary-1.0.0.json vocabulary.json
-ADDITIVE  Text property maxLines added
-verdict: ok (0 breaking, 1 additive)</code></pre>
-          <p>
-            Additive changes need a minor bump, breaking ones a major, and documents declare the minimum they
-            need, so old apps and new documents never meet by accident. Regenerate the bindings, add the
-            renderer for anything new, and ship the app on its own schedule.
-          </p>
+<span class="tk-kw">object</span> <span class="tk-type">ImageRenderer</span> : <span class="tk-type">MilanoRenderer</span> {
+    @<span class="tk-type">Composable</span>
+    <span class="tk-kw">override</span> <span class="tk-kw">fun</span> <span class="tk-type">Render</span>(node: <span class="tk-type">MilanoNode</span>) {
+        <span class="tk-kw">val</span> image = <span class="tk-type">PromoImageNode</span>(node)
+        <span class="tk-kw">var</span> modifier: <span class="tk-type">Modifier</span> = <span class="tk-type">Modifier</span>.fillMaxWidth()
+        image.height?.let { modifier = modifier.height(it.toInt().dp) }
+        image.cornerRadius?.let { modifier = modifier.clip(<span class="tk-type">RoundedCornerShape</span>(it.toInt().dp)) }
+        <span class="tk-type">AsyncImage</span>(
+            model = image.url,
+            contentDescription = <span class="tk-kw">null</span>,
+            contentScale = <span class="tk-type">ContentScale</span>.<span class="tk-type">Crop</span>,
+            modifier = modifier,
+        )
+    }
+}
 
-          <div class="aside">
-            <p>
-              <strong>Compose or React instead?</strong> The producer side is identical; the app side differs
-              only in the renderer and host types. <code>milano bindings</code> writes Kotlin
-              (<code>--kotlin-out</code>) and TypeScript (<code>--ts-out</code>) too, and the sample apps show
-              the same banner on all four platforms.
-            </p>
-          </div>
+<span class="tk-kw">object</span> <span class="tk-type">ButtonRenderer</span> : <span class="tk-type">MilanoRenderer</span> {
+    @<span class="tk-type">Composable</span>
+    <span class="tk-kw">override</span> <span class="tk-kw">fun</span> <span class="tk-type">Render</span>(node: <span class="tk-type">MilanoNode</span>) {
+        <span class="tk-kw">val</span> button = <span class="tk-type">PromoButtonNode</span>(node)
+        <span class="tk-type">Button</span>(onClick = { button.emitTap() }, enabled = button.enabled) {
+            <span class="tk-type">Text</span>(button.label)
+        }
+    }
+}</code></pre></figure></div>
+<div class="tab" data-platform="react" hidden><figure class="code"><figcaption><span class="lang">TypeScript</span><span class="path">src/milano/bridge.tsx</span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-kw">import</span> { createMilanoRegistry } <span class="tk-kw">from</span> <span class="tk-str">&quot;@get-milano/react&quot;</span>;
+<span class="tk-kw">import</span> <span class="tk-kw">type</span> { <span class="tk-type">MilanoReactRegistry</span>, <span class="tk-type">MilanoRenderer</span> } <span class="tk-kw">from</span> <span class="tk-str">&quot;@get-milano/react&quot;</span>;
+<span class="tk-kw">import</span> { <span class="tk-type">Image</span>, <span class="tk-type">Pressable</span>, <span class="tk-type">Text</span>, <span class="tk-type">View</span> } <span class="tk-kw">from</span> <span class="tk-str">&quot;react-native&quot;</span>;
 
-          <h2>Where next</h2>
+<span class="tk-kw">import</span> { <span class="tk-type">PromoButtonNode</span>, <span class="tk-type">PromoImageNode</span>, <span class="tk-type">PromoTextNode</span> } <span class="tk-kw">from</span> <span class="tk-str">&quot;./bindings.ts&quot;</span>;
+
+<span class="tk-cm">/**
+ * The bridge: one renderer per vocabulary type, each mapping a typed node
+ * onto a component the app already has. Milano draws nothing itself.
+ */</span>
+
+<span class="tk-kw">const</span> <span class="tk-type">ColumnRenderer</span>: <span class="tk-type">MilanoRenderer</span> = ({ node }) =&gt; (
+  &lt;<span class="tk-type">View</span> style={{ gap: <span class="tk-num">12</span>, padding: <span class="tk-num">16</span> }}&gt;{node.children}&lt;/<span class="tk-type">View</span>&gt;
+);
+
+<span class="tk-kw">const</span> <span class="tk-type">TextRenderer</span>: <span class="tk-type">MilanoRenderer</span> = ({ node }) =&gt; {
+  <span class="tk-kw">const</span> text = <span class="tk-kw">new</span> <span class="tk-type">PromoTextNode</span>(node);
+  <span class="tk-kw">if</span> (text.role === <span class="tk-str">&quot;title&quot;</span>) <span class="tk-kw">return</span> &lt;<span class="tk-type">Text</span> style={{ fontSize: <span class="tk-num">22</span>, fontWeight: <span class="tk-str">&quot;700&quot;</span> }}&gt;{text.text}&lt;/<span class="tk-type">Text</span>&gt;;
+  <span class="tk-kw">return</span> &lt;<span class="tk-type">Text</span> style={{ fontSize: <span class="tk-num">15</span>, color: <span class="tk-str">&quot;#6b6b6b&quot;</span> }}&gt;{text.text}&lt;/<span class="tk-type">Text</span>&gt;;
+};
+
+<span class="tk-kw">const</span> <span class="tk-type">ImageRenderer</span>: <span class="tk-type">MilanoRenderer</span> = ({ node }) =&gt; {
+  <span class="tk-kw">const</span> image = <span class="tk-kw">new</span> <span class="tk-type">PromoImageNode</span>(node);
+  <span class="tk-kw">return</span> (
+    &lt;<span class="tk-type">Image</span>
+      source={{ uri: image.url }}
+      resizeMode=<span class="tk-str">&quot;cover&quot;</span>
+      style={{
+        width: <span class="tk-str">&quot;100%&quot;</span>,
+        height: image.height === <span class="tk-kw">null</span> ? <span class="tk-num">160</span> : <span class="tk-type">Number</span>(image.height),
+        borderRadius: <span class="tk-type">Number</span>(image.cornerRadius ?? <span class="tk-num">0</span>),
+      }}
+    /&gt;
+  );
+};
+
+<span class="tk-kw">const</span> <span class="tk-type">ButtonRenderer</span>: <span class="tk-type">MilanoRenderer</span> = ({ node }) =&gt; {
+  <span class="tk-kw">const</span> button = <span class="tk-kw">new</span> <span class="tk-type">PromoButtonNode</span>(node);
+  <span class="tk-kw">return</span> (
+    &lt;<span class="tk-type">Pressable</span>
+      accessibilityRole=<span class="tk-str">&quot;button&quot;</span>
+      disabled={!button.enabled}
+      onPress={() =&gt; button.emitTap()}
+      style={{
+        alignSelf: <span class="tk-str">&quot;flex-start&quot;</span>,
+        backgroundColor: <span class="tk-str">&quot;#d12360&quot;</span>,
+        borderRadius: <span class="tk-num">999</span>,
+        paddingHorizontal: <span class="tk-num">18</span>,
+        paddingVertical: <span class="tk-num">10</span>,
+        opacity: button.enabled ? <span class="tk-num">1</span> : <span class="tk-num">0</span>.<span class="tk-num">5</span>,
+      }}
+    &gt;
+      &lt;<span class="tk-type">Text</span> style={{ color: <span class="tk-str">&quot;#fff&quot;</span>, fontWeight: <span class="tk-str">&quot;600&quot;</span> }}&gt;{button.label}&lt;/<span class="tk-type">Text</span>&gt;
+    &lt;/<span class="tk-type">Pressable</span>&gt;
+  );
+};
+
+<span class="tk-kw">export</span> <span class="tk-kw">function</span> promoRegistry(): <span class="tk-type">MilanoReactRegistry</span> {
+  <span class="tk-kw">const</span> registry = createMilanoRegistry();
+  registry.register(<span class="tk-str">&quot;Column&quot;</span>, <span class="tk-type">ColumnRenderer</span>);
+  registry.register(<span class="tk-str">&quot;Text&quot;</span>, <span class="tk-type">TextRenderer</span>);
+  registry.register(<span class="tk-str">&quot;Image&quot;</span>, <span class="tk-type">ImageRenderer</span>);
+  registry.register(<span class="tk-str">&quot;Button&quot;</span>, <span class="tk-type">ButtonRenderer</span>);
+  <span class="tk-kw">return</span> registry;
+}</code></pre></figure></div>
+            <p><code>node.children</code> are the column's materialized children, already renderable: the container only places them. The button's <code>emitTap()</code> puts the event into Milano's dispatch, which runs the actions the document bound to it.</p>
+          </section>
+
+          <section class="step" id="step-7">
+            <div class="step-head"><span class="badge">7</span><h2>Create the engine and show the banner</h2></div>
+
+            <p>One engine per app, created once with the vocabulary and the registry, then a builder per surface: the document, the context the document declared, and the handler for the actions it may request. Both files come from the producer folder the app bundled in step 5.</p>
+            <div class="tab" data-platform="swiftui"><figure class="code"><figcaption><span class="lang">Swift</span><span class="path">MyApp/Milano/PromoBanner.swift</span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-kw">import</span> <span class="tk-type">MilanoSDK</span>
+<span class="tk-kw">import</span> <span class="tk-type">SwiftUI</span>
+
+<span class="tk-cm">/// One engine for the whole app, created once with the vocabulary the</span>
+<span class="tk-cm">/// bridge implements; every screen builds its views from it.</span>
+<span class="tk-kw">enum</span> <span class="tk-type">Milano</span> {
+    <span class="tk-kw">static</span> <span class="tk-kw">let</span> engine: <span class="tk-type">MilanoEngine</span> = {
+        <span class="tk-kw">do</span> {
+            <span class="tk-kw">let</span> engine = <span class="tk-kw">try</span> <span class="tk-type">MilanoEngine</span>(
+                vocabularyJSON: resource(<span class="tk-str">&quot;vocabulary&quot;</span>),
+                registry: <span class="tk-type">PromoBridge</span>.registry())
+            <span class="tk-cm">// Refuses to run against a vocabulary the bindings were not generated from.</span>
+            <span class="tk-type">PromoVocabulary</span>.assertMatches(engine)
+            <span class="tk-kw">return</span> engine
+        } <span class="tk-kw">catch</span> {
+            fatalError(<span class="tk-str">&quot;Milano setup failed: \(error)&quot;</span>)
+        }
+    }()
+
+    <span class="tk-cm">/// The banner: the document from the producer folder, bundled with</span>
+    <span class="tk-cm">/// the app, plus the context it declared and the handler for its actions.</span>
+    <span class="tk-kw">static</span> <span class="tk-kw">func</span> bannerBuilder() -&gt; <span class="tk-type">MilanoViewBuilder</span> {
+        engine.viewBuilder(document: resource(<span class="tk-str">&quot;banner&quot;</span>))
+            .context([<span class="tk-str">&quot;userName&quot;</span>: .string(<span class="tk-str">&quot;Ada&quot;</span>)])
+            .actionHandler(handle(_:))
+            .label(<span class="tk-str">&quot;banner&quot;</span>)
+    }
+
+    <span class="tk-cm">/// The single funnel for custom actions. The gate proved `url` is a</span>
+    <span class="tk-cm">/// string; whether it is safe to open is the app&#x27;s decision.</span>
+    @<span class="tk-type">Sendable</span> <span class="tk-kw">static</span> <span class="tk-kw">func</span> handle(_ action: <span class="tk-type">MilanoAction</span>) <span class="tk-kw">async</span> <span class="tk-kw">throws</span> -&gt; <span class="tk-type">MilanoValue</span>? {
+        <span class="tk-kw">switch</span> <span class="tk-type">PromoAction</span>(action) {
+        <span class="tk-kw">case</span> .openUrl(<span class="tk-kw">let</span> url):
+            <span class="tk-kw">guard</span> <span class="tk-kw">let</span> url = <span class="tk-type">URL</span>(string: url), url.scheme == <span class="tk-str">&quot;https&quot;</span> <span class="tk-kw">else</span> { <span class="tk-kw">return</span> <span class="tk-kw">nil</span> }
+            <span class="tk-kw">await</span> open(url)
+        <span class="tk-kw">case</span> .unrecognized(<span class="tk-kw">let</span> action):
+            print(<span class="tk-str">&quot;unhandled action \(action.name)&quot;</span>)
+        }
+        <span class="tk-kw">return</span> <span class="tk-kw">nil</span>
+    }
+
+    @<span class="tk-type">MainActor</span> <span class="tk-kw">private</span> <span class="tk-kw">static</span> <span class="tk-kw">func</span> open(_ url: <span class="tk-type">URL</span>) {
+        <span class="tk-type">UIApplication</span>.shared.open(url)
+    }
+
+    <span class="tk-kw">private</span> <span class="tk-kw">static</span> <span class="tk-kw">func</span> resource(_ name: <span class="tk-type">String</span>) -&gt; <span class="tk-type">Data</span> {
+        <span class="tk-kw">guard</span> <span class="tk-kw">let</span> url = <span class="tk-type">Bundle</span>.main.url(forResource: name, withExtension: <span class="tk-str">&quot;json&quot;</span>),
+              <span class="tk-kw">let</span> data = <span class="tk-kw">try</span>? <span class="tk-type">Data</span>(contentsOf: url)
+        <span class="tk-kw">else</span> { fatalError(<span class="tk-str">&quot;\(name).json is not in the app bundle; add it to the target&quot;</span>) }
+        <span class="tk-kw">return</span> data
+    }
+}
+
+<span class="tk-cm">/// Drop it into any screen: the banner renders where this view sits.</span>
+<span class="tk-kw">struct</span> <span class="tk-type">PromoBannerView</span>: <span class="tk-type">View</span> {
+    <span class="tk-kw">var</span> body: <span class="tk-kw">some</span> <span class="tk-type">View</span> {
+        <span class="tk-type">MilanoHost</span>(builder: <span class="tk-type">Milano</span>.bannerBuilder()) {
+            <span class="tk-type">ProgressView</span>()
+        } failure: { _ <span class="tk-kw">in</span>
+            <span class="tk-type">EmptyView</span>()   <span class="tk-cm">// an optional surface fails to nothing</span>
+        }
+    }
+}</code></pre></figure>
+            <p>Put <code>PromoBannerView()</code> wherever the banner belongs, a home screen, a list header, a sheet.</p></div>
+<div class="tab" data-platform="compose" hidden><figure class="code"><figcaption><span class="lang">Kotlin</span><span class="path">app/src/main/kotlin/com/example/myapp/milano/PromoBanner.kt</span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-kw">package</span> com.example.myapp.milano
+
+<span class="tk-kw">import</span> android.content.<span class="tk-type">Context</span>
+<span class="tk-kw">import</span> android.content.<span class="tk-type">Intent</span>
+<span class="tk-kw">import</span> android.net.<span class="tk-type">Uri</span>
+<span class="tk-kw">import</span> androidx.compose.material3.<span class="tk-type">CircularProgressIndicator</span>
+<span class="tk-kw">import</span> androidx.compose.runtime.<span class="tk-type">Composable</span>
+<span class="tk-kw">import</span> androidx.compose.runtime.remember
+<span class="tk-kw">import</span> dev.getmilano.<span class="tk-type">MilanoAction</span>
+<span class="tk-kw">import</span> dev.getmilano.<span class="tk-type">MilanoEngine</span>
+<span class="tk-kw">import</span> dev.getmilano.<span class="tk-type">MilanoHost</span>
+<span class="tk-kw">import</span> dev.getmilano.<span class="tk-type">MilanoValue</span>
+<span class="tk-kw">import</span> dev.getmilano.<span class="tk-type">MilanoViewBuilder</span>
+<span class="tk-kw">import</span> dev.getmilano.viewBuilder
+
+<span class="tk-cm">/**
+ * One engine for the whole app, created once with the vocabulary the
+ * bridge implements; every screen builds its views from it.
+ */</span>
+<span class="tk-kw">class</span> <span class="tk-type">Milano</span>(<span class="tk-kw">private</span> <span class="tk-kw">val</span> context: <span class="tk-type">Context</span>) {
+    <span class="tk-kw">private</span> <span class="tk-kw">val</span> engine: <span class="tk-type">MilanoEngine</span> <span class="tk-kw">by</span> <span class="tk-kw">lazy</span> {
+        <span class="tk-type">MilanoEngine</span>(
+            vocabularyJson = asset(<span class="tk-str">&quot;milano/vocabulary.json&quot;</span>),
+            registry = promoRegistry(),
+        ).<span class="tk-kw">also</span> { <span class="tk-type">PromoVocabulary</span>.assertMatches(it) }
+        <span class="tk-cm">// Refuses to run against a vocabulary the bindings were not generated from.</span>
+    }
+
+    <span class="tk-cm">/**
+     * The banner: the document from the producer folder, copied into the
+     * assets at build time, plus the context it declared and the handler
+     * for its actions.
+     */</span>
+    <span class="tk-kw">fun</span> bannerBuilder(): <span class="tk-type">MilanoViewBuilder</span> =
+        engine
+            .viewBuilder(asset(<span class="tk-str">&quot;milano/documents/banner.json&quot;</span>))
+            .context(mapOf(<span class="tk-str">&quot;userName&quot;</span> <span class="tk-kw">to</span> <span class="tk-type">MilanoValue</span>.<span class="tk-type">StringValue</span>(<span class="tk-str">&quot;Ada&quot;</span>)))
+            .actionHandler { action -&gt; handle(action) }
+            .label(<span class="tk-str">&quot;banner&quot;</span>)
+
+    <span class="tk-cm">/**
+     * The single funnel for custom actions. The gate proved `url` is a
+     * string; whether it is safe to open is the app&#x27;s decision.
+     */</span>
+    <span class="tk-kw">private</span> <span class="tk-kw">fun</span> handle(action: <span class="tk-type">MilanoAction</span>): <span class="tk-type">MilanoValue</span>? {
+        <span class="tk-kw">when</span> (<span class="tk-kw">val</span> decoded = <span class="tk-type">PromoAction</span>.from(action)) {
+            <span class="tk-kw">is</span> <span class="tk-type">PromoAction</span>.<span class="tk-type">OpenUrl</span> -&gt; {
+                <span class="tk-kw">val</span> uri = <span class="tk-type">Uri</span>.parse(decoded.url)
+                <span class="tk-kw">if</span> (uri.scheme == <span class="tk-str">&quot;https&quot;</span>) {
+                    context.startActivity(<span class="tk-type">Intent</span>(<span class="tk-type">Intent</span>.<span class="tk-type">ACTION_VIEW</span>, uri).addFlags(<span class="tk-type">Intent</span>.<span class="tk-type">FLAG_ACTIVITY_NEW_TASK</span>))
+                }
+            }
+            <span class="tk-kw">is</span> <span class="tk-type">PromoAction</span>.<span class="tk-type">Unrecognized</span> -&gt; println(<span class="tk-str">&quot;unhandled action ${decoded.action.name}&quot;</span>)
+        }
+        <span class="tk-kw">return</span> <span class="tk-kw">null</span>
+    }
+
+    <span class="tk-kw">private</span> <span class="tk-kw">fun</span> asset(name: <span class="tk-type">String</span>): <span class="tk-type">String</span> = context.assets.open(name).bufferedReader().use { it.readText() }
+}
+
+<span class="tk-cm">/** Drop it into any screen: the banner renders where this composable sits. */</span>
+@<span class="tk-type">Composable</span>
+<span class="tk-kw">fun</span> <span class="tk-type">PromoBanner</span>(milano: <span class="tk-type">Milano</span>) {
+    <span class="tk-kw">val</span> builder = remember { milano.bannerBuilder() }
+    <span class="tk-type">MilanoHost</span>(
+        builder = builder,
+        loading = { <span class="tk-type">CircularProgressIndicator</span>() },
+        failure = { <span class="tk-cm">/* an optional surface fails to nothing */</span> },
+    )
+}</code></pre></figure>
+            <p>Create one <code>Milano(applicationContext)</code> for the app (in your <code>Application</code> or your dependency graph) and put <code>PromoBanner(milano)</code> wherever the banner belongs, a home screen, a list header, a bottom sheet. Events and view updates run on the main thread by default.</p></div>
+<div class="tab" data-platform="react" hidden><figure class="code"><figcaption><span class="lang">TypeScript</span><span class="path">src/milano/banner.tsx</span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-kw">import</span> { <span class="tk-type">MilanoEngine</span>, <span class="tk-type">MilanoValue</span> } <span class="tk-kw">from</span> <span class="tk-str">&quot;@get-milano/core&quot;</span>;
+<span class="tk-kw">import</span> <span class="tk-kw">type</span> { <span class="tk-type">MilanoAction</span> } <span class="tk-kw">from</span> <span class="tk-str">&quot;@get-milano/core&quot;</span>;
+<span class="tk-kw">import</span> { <span class="tk-type">MilanoHost</span> } <span class="tk-kw">from</span> <span class="tk-str">&quot;@get-milano/react&quot;</span>;
+<span class="tk-kw">import</span> <span class="tk-kw">type</span> { <span class="tk-type">MilanoReactBuilder</span> } <span class="tk-kw">from</span> <span class="tk-str">&quot;@get-milano/react&quot;</span>;
+<span class="tk-kw">import</span> { useMemo } <span class="tk-kw">from</span> <span class="tk-str">&quot;react&quot;</span>;
+<span class="tk-kw">import</span> <span class="tk-kw">type</span> { <span class="tk-type">ReactNode</span> } <span class="tk-kw">from</span> <span class="tk-str">&quot;react&quot;</span>;
+<span class="tk-kw">import</span> { <span class="tk-type">ActivityIndicator</span>, <span class="tk-type">Linking</span> } <span class="tk-kw">from</span> <span class="tk-str">&quot;react-native&quot;</span>;
+
+<span class="tk-kw">import</span> { <span class="tk-type">PromoVocabulary</span>, promoAction } <span class="tk-kw">from</span> <span class="tk-str">&quot;./bindings.ts&quot;</span>;
+<span class="tk-kw">import</span> { promoRegistry } <span class="tk-kw">from</span> <span class="tk-str">&quot;./bridge.tsx&quot;</span>;
+<span class="tk-kw">import</span> banner <span class="tk-kw">from</span> <span class="tk-str">&quot;../../milano/documents/banner.json&quot;</span>;
+<span class="tk-kw">import</span> vocabulary <span class="tk-kw">from</span> <span class="tk-str">&quot;../../milano/vocabulary.json&quot;</span>;
+
+<span class="tk-cm">/**
+ * One engine for the whole app, created once with the vocabulary the
+ * bridge implements; every screen builds its views from it.
+ */</span>
+<span class="tk-kw">const</span> engine = <span class="tk-kw">new</span> <span class="tk-type">MilanoEngine</span>({ vocabularyJson: <span class="tk-type">JSON</span>.stringify(vocabulary), registry: promoRegistry() });
+<span class="tk-cm">// Refuses to run against a vocabulary the bindings were not generated from.</span>
+<span class="tk-type">PromoVocabulary</span>.assertMatches(engine);
+
+<span class="tk-cm">/**
+ * The single funnel for custom actions. The gate proved `url` is a
+ * string; whether it is safe to open is the app&#x27;s decision.
+ */</span>
+<span class="tk-kw">async</span> <span class="tk-kw">function</span> handle(action: <span class="tk-type">MilanoAction</span>): <span class="tk-type">Promise</span>&lt;<span class="tk-type">MilanoValue</span> | <span class="tk-kw">null</span>&gt; {
+  <span class="tk-kw">const</span> decoded = promoAction(action);
+  <span class="tk-kw">switch</span> (decoded.kind) {
+    <span class="tk-kw">case</span> <span class="tk-str">&quot;openUrl&quot;</span>:
+      <span class="tk-kw">if</span> (decoded.url.startsWith(<span class="tk-str">&quot;https://&quot;</span>)) <span class="tk-kw">await</span> <span class="tk-type">Linking</span>.openURL(decoded.url);
+      <span class="tk-kw">return</span> <span class="tk-kw">null</span>;
+    <span class="tk-kw">case</span> <span class="tk-str">&quot;unrecognized&quot;</span>:
+      console.log(<span class="tk-str">`unhandled action ${decoded.action.name}`</span>);
+      <span class="tk-kw">return</span> <span class="tk-kw">null</span>;
+  }
+}
+
+<span class="tk-cm">/**
+ * The banner: the document from the producer folder, imported in place,
+ * plus the context it declared and the handler for its actions.
+ */</span>
+<span class="tk-kw">export</span> <span class="tk-kw">function</span> bannerBuilder(): <span class="tk-type">MilanoReactBuilder</span> {
+  <span class="tk-kw">return</span> engine
+    .viewBuilder(<span class="tk-type">JSON</span>.stringify(banner))
+    .context({ userName: <span class="tk-type">MilanoValue</span>.string(<span class="tk-str">&quot;Ada&quot;</span>) })
+    .actionHandler(handle)
+    .label(<span class="tk-str">&quot;banner&quot;</span>);
+}
+
+<span class="tk-cm">/** Drop it into any screen: the banner renders where this component sits. */</span>
+<span class="tk-kw">export</span> <span class="tk-kw">function</span> <span class="tk-type">PromoBanner</span>(): <span class="tk-type">ReactNode</span> {
+  <span class="tk-kw">const</span> builder = useMemo(() =&gt; bannerBuilder(), []);
+  <span class="tk-kw">return</span> &lt;<span class="tk-type">MilanoHost</span> builder={builder} loading={&lt;<span class="tk-type">ActivityIndicator</span> /&gt;} failure={() =&gt; <span class="tk-kw">null</span>} /&gt;;
+}</code></pre></figure>
+            <p>Put <code>&lt;PromoBanner /&gt;</code> wherever the banner belongs. The builder is memoized because a new builder means a new build; <code>MilanoHost</code> subscribes to the view and tears it down when it unmounts.</p></div>
+            <p>Build and run: the image loads, the title reads "Summer sale, Ada", the button opens the offer. The handler is the last capability check: the gate proved <code>url</code> is a string, the app decides that only <code>https</code> leaves it. The failure content is where a rejected document lands; for an optional surface, nothing is the right thing to show.</p>
+          </section>
+
+          <section class="step" id="step-8">
+            <div class="step-head"><span class="badge">8</span><h2>Change the banner</h2></div>
+
+            <p>Edit <code>milano/documents/banner.json</code>: new copy, a different image, a second line of text. Run <code>npm run check</code>, rebuild the app, and the change is on screen. No app code moved, because the app bundles the producer folder's files: from here on, changing what the banner says is a change in <code>milano/</code>, checked by the CLI, and the app is rebuilt with it.</p>
+            <p>When the vocabulary itself changes (a new component, a new property), bump its version and let the CLI say whether the bump is right before the app team depends on it:</p>
+            <figure class="code"><figcaption><span class="lang">Terminal</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="prompt">$ </span>npx milano diff vocabulary-1.0.0.json vocabulary.json
+<span class="out">ADDITIVE  Text property maxLines added</span>
+<span class="out">verdict: ok (0 breaking, 1 additive)</span></code></pre></figure>
+            <p>Additive changes need a minor bump, breaking ones a major, and documents declare the minimum they need, so an older app and a newer document never meet by accident. Regenerate the bindings, add the renderer for anything new, and the compiler walks you through the rest.</p>
+            <div class="callout note">
+              <div class="title">The same document, everywhere</div>
+              <p>Switch the platform above and read steps 4 to 7 again: the vocabulary, the banner, and the check never changed. That is the contract: one document, validated once, rendered by whatever the app is built with.</p>
+            </div>
+          </section>
+
+          <h2 class="plain" id="next">Where next</h2>
           <div class="next">
             <a href="/sdk/bridge">
+              <div class="type">"type": "Guide"</div>
               <strong>Creating a bridge</strong>
               <span>The full renderer contract, unknown-type policies, generated bindings as a build step.</span>
             </a>
             <a href="/sdk/producing">
+              <div class="type">"type": "Guide"</div>
               <strong>Producing documents</strong>
               <span>The producer's workflow: the loop, vocabulary evolution, CI, working with an AI agent.</span>
             </a>
             <a href="/sdk/documents">
+              <div class="type">"type": "Reference"</div>
               <strong>Writing documents</strong>
               <span>The document format: types, expressions, actions, lists with <code>$repeat</code>, forms.</span>
             </a>
             <a href="/sdk/samples">
-              <strong>Samples</strong>
-              <span>Four apps rendering the same documents on SwiftUI, Compose, Compose Desktop, and React Native.</span>
+              <div class="type">"type": "Samples"</div>
+              <strong>Four sample apps</strong>
+              <span>The same documents on SwiftUI, Compose, Compose Desktop, and React Native, with screenshots.</span>
             </a>
+          </div>
           </div>
         </div>
       </article>
@@ -461,5 +757,49 @@ verdict: ok (0 breaking, 1 additive)</code></pre>
         <span>Made with ♥️ by <a href="https://kimi.blog">Ezequiel (Kimi) Aceto</a></span>
       </div>
     </footer>
+
+    <script>
+      // The platform switch: steps 4 to 7 show one platform at a time. The
+      // choice is remembered, and ?platform=compose links straight to one.
+      const NAMES = { swiftui: ["iOS · SwiftUI", "SwiftUI"], compose: ["Android · Compose", "Compose"], react: ["React Native", "React Native"] };
+      function pick(platform, remember = true) {
+        if (!(platform in NAMES)) platform = "swiftui";
+        for (const tab of document.querySelectorAll(".tab")) tab.hidden = tab.dataset.platform !== platform;
+        for (const button of document.querySelectorAll(".platform-switch [role=tab]")) {
+          button.setAttribute("aria-selected", String(button.dataset.platform === platform));
+        }
+        const [long, short] = NAMES[platform];
+        document.querySelectorAll("[data-platform-name]").forEach((el, index) => { el.textContent = index === 0 ? long : short; });
+        if (remember) { try { localStorage.setItem("milano-platform", platform); } catch {} }
+      }
+      for (const button of document.querySelectorAll(".platform-switch [role=tab]")) {
+        button.addEventListener("click", () => pick(button.dataset.platform));
+      }
+      let initial = new URLSearchParams(location.search).get("platform");
+      if (!initial) { try { initial = localStorage.getItem("milano-platform"); } catch {} }
+      pick(initial ?? "swiftui", false);
+
+      // Copy buttons on the code boxes, and the step on screen highlighted in the nav.
+      for (const button of document.querySelectorAll(".code .copy")) {
+        button.addEventListener("click", async () => {
+          const text = button.closest(".code").querySelector("pre").innerText.replace(/^\$ /gm, "");
+          try {
+            await navigator.clipboard.writeText(text);
+            button.textContent = "Copied";
+            setTimeout(() => { button.textContent = "Copy"; }, 1400);
+          } catch {
+            button.textContent = "Select and copy";
+          }
+        });
+      }
+      const links = [...document.querySelectorAll(".guide-nav ol a")];
+      const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          for (const link of links) link.classList.toggle("active", link.getAttribute("href") === "#" + entry.target.id);
+        }
+      }, { rootMargin: "-20% 0px -70% 0px" });
+      for (const section of document.querySelectorAll(".step")) observer.observe(section);
+    </script>
   </body>
 </html>

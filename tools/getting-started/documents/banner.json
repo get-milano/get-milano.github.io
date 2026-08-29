@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "vocabulary": { "name": "promo", "min": "1.0.0" },
+  "context": { "userName": "string" },
+  "root": {
+    "type": "Column",
+    "id": "banner",
+    "children": [
+      {
+        "type": "Image",
+        "properties": {
+          "url": "https://images.example.com/summer.jpg",
+          "height": 160,
+          "cornerRadius": 12
+        }
+      },
+      {
+        "type": "Text",
+        "properties": {
+          "text": { "$expr": "concat('Summer sale, ', context.userName)" },
+          "role": "title"
+        }
+      },
+      {
+        "type": "Text",
+        "properties": {
+          "text": "Twenty percent off every espresso machine until Sunday.",
+          "role": "body"
+        }
+      },
+      {
+        "type": "Button",
+        "id": "cta",
+        "properties": { "label": "See the offer", "enabled": true },
+        "on": {
+          "tap": [ { "action": "openUrl", "url": "https://shop.example.com/sale" } ]
+        }
+      }
+    ]
+  },
+  "metadata": { "campaign": "summer-2026" }
+}

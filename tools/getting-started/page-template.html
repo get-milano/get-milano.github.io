@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Getting started · Milano</title>
+    <meta
+      name="description"
+      content="Add Milano to an existing app in eight steps: scaffold a producer folder with the CLI, declare a vocabulary, write a banner document, generate typed bindings, bridge your SwiftUI, Compose, or React Native views, and render it."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Ezequiel (Kimi) Aceto" />
+    <meta name="theme-color" content="#fdf8fa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1d151b" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="canonical" href="https://get-milano.dev/getting-started/" />
+    <link rel="icon" href="../favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png" sizes="180x180" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://get-milano.dev/getting-started/" />
+    <meta property="og:site_name" content="Milano" />
+    <meta property="og:title" content="Getting started with Milano" />
+    <meta
+      property="og:description"
+      content="From an empty folder to a banner rendered by your own SwiftUI, Compose, or React Native views, with the Milano CLI doing the checking."
+    />
+    <meta property="og:image" content="https://get-milano.dev/og-cover.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Fragment+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="shell">
+        <a class="wordmark" href="/"><img src="../get-milano.png" alt="" width="22" height="22" />Milano<span class="dot">.</span></a>
+        <nav aria-label="Main">
+          <a href="/getting-started/">Getting started</a>
+          <a href="/specs/">Specs</a>
+          <a href="/sdk/">SDK</a>
+          <a href="/playground/">Playground</a>
+          <a href="https://github.com/get-milano">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="guide rail">
+        <div class="shell">
+          <nav class="guide-nav" aria-label="Steps">
+            <div class="label">STEPS</div>
+            <ol>
+@@nav@@
+            </ol>
+            <div class="plain"><a href="#next">Where next</a></div>
+          </nav>
+
+          <div class="guide-content">
+          <div class="eyebrow">// tutorial · <span data-platform-name>iOS · SwiftUI</span></div>
+          <h1>Add Milano to an app you already have.</h1>
+          <p class="lede">
+            A promotional banner, an image, a title, a line of copy, and a button, described in a JSON
+            document and rendered by your own views. The document is checked by the same gate the app
+            runs, so what passes on your machine renders on the device, and changing the banner later
+            means editing a document, not app code.
+          </p>
+          <div class="pills">
+            <span class="pill">Node 20+ for the CLI</span>
+            <span class="pill">about 30 minutes</span>
+            <span class="pill">SDK 2.0</span>
+          </div>
+          <p class="pick">Your app is built with</p>
+          <div class="platform-switch" role="tablist" aria-label="Your app"><button type="button" role="tab" data-platform="swiftui" aria-selected="true">SwiftUI</button><button type="button" role="tab" data-platform="compose" aria-selected="false">Compose</button><button type="button" role="tab" data-platform="react" aria-selected="false">React Native</button></div>
+
+          <div class="build" aria-label="What you will build">
+            <div class="preview" aria-hidden="true">
+              <div class="preview-image">Image · summer.jpg</div>
+              <div class="preview-title">Summer sale, Ada</div>
+              <div class="preview-body">Twenty percent off every espresso machine until Sunday.</div>
+              <span class="preview-button">See the offer</span>
+            </div>
+            <ul>
+              <li>A <strong>producer folder</strong> the CLI scaffolds, with the vocabulary and the documents, checked by <code>npm run check</code>.</li>
+              <li>A <strong>vocabulary</strong> of four components and one action, and <strong>typed bindings</strong> generated from it.</li>
+              <li>Four <strong>renderers</strong> mapping the document onto your <span data-platform-name>SwiftUI</span> components, and one engine that hosts the banner.</li>
+              <li>A banner you change by <strong>editing a document</strong>, with the app code untouched.</li>
+            </ul>
+          </div>
+
+          <p>
+            Two roles appear in the steps. The <strong>producer</strong> writes the vocabulary and the documents;
+            the <strong>app</strong> registers a view per vocabulary type and renders whatever passes the gate.
+            In a small team both are you, and the folder layout keeps them apart anyway, because the
+            documents will outlive any one build of the app. Steps 1 to 3 and 8 are the producer's and do
+            not depend on the platform; steps 4 to 7 follow the platform you picked.
+          </p>
+
+          @@body@@
+
+          <h2 class="plain" id="next">Where next</h2>
+          <div class="next">
+            <a href="/sdk/bridge">
+              <div class="type">"type": "Guide"</div>
+              <strong>Creating a bridge</strong>
+              <span>The full renderer contract, unknown-type policies, generated bindings as a build step.</span>
+            </a>
+            <a href="/sdk/producing">
+              <div class="type">"type": "Guide"</div>
+              <strong>Producing documents</strong>
+              <span>The producer's workflow: the loop, vocabulary evolution, CI, working with an AI agent.</span>
+            </a>
+            <a href="/sdk/documents">
+              <div class="type">"type": "Reference"</div>
+              <strong>Writing documents</strong>
+              <span>The document format: types, expressions, actions, lists with <code>$repeat</code>, forms.</span>
+            </a>
+            <a href="/sdk/samples">
+              <div class="type">"type": "Samples"</div>
+              <strong>Four sample apps</strong>
+              <span>The same documents on SwiftUI, Compose, Compose Desktop, and React Native, with screenshots.</span>
+            </a>
+          </div>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer class="rail">
+      <div class="shell">
+        <span>Milano · Document-Driven UI</span>
+        <a href="https://github.com/get-milano/specs">specs</a>
+        <a href="https://github.com/get-milano/sdk">sdk</a>
+        <a href="https://github.com/get-milano/playground">playground</a>
+        <span class="spacer"></span>
+        <span>Made with ♥️ by <a href="https://kimi.blog">Ezequiel (Kimi) Aceto</a></span>
+      </div>
+    </footer>
+
+    <script>
+      // The platform switch: steps 4 to 7 show one platform at a time. The
+      // choice is remembered, and ?platform=compose links straight to one.
+      const NAMES = { swiftui: ["iOS · SwiftUI", "SwiftUI"], compose: ["Android · Compose", "Compose"], react: ["React Native", "React Native"] };
+      function pick(platform, remember = true) {
+        if (!(platform in NAMES)) platform = "swiftui";
+        for (const tab of document.querySelectorAll(".tab")) tab.hidden = tab.dataset.platform !== platform;
+        for (const button of document.querySelectorAll(".platform-switch [role=tab]")) {
+          button.setAttribute("aria-selected", String(button.dataset.platform === platform));
+        }
+        const [long, short] = NAMES[platform];
+        document.querySelectorAll("[data-platform-name]").forEach((el, index) => { el.textContent = index === 0 ? long : short; });
+        if (remember) { try { localStorage.setItem("milano-platform", platform); } catch {} }
+      }
+      for (const button of document.querySelectorAll(".platform-switch [role=tab]")) {
+        button.addEventListener("click", () => pick(button.dataset.platform));
+      }
+      let initial = new URLSearchParams(location.search).get("platform");
+      if (!initial) { try { initial = localStorage.getItem("milano-platform"); } catch {} }
+      pick(initial ?? "swiftui", false);
+
+      // Copy buttons on the code boxes, and the step on screen highlighted in the nav.
+      for (const button of document.querySelectorAll(".code .copy")) {
+        button.addEventListener("click", async () => {
+          const text = button.closest(".code").querySelector("pre").innerText.replace(/^\$ /gm, "");
+          try {
+            await navigator.clipboard.writeText(text);
+            button.textContent = "Copied";
+            setTimeout(() => { button.textContent = "Copy"; }, 1400);
+          } catch {
+            button.textContent = "Select and copy";
+          }
+        });
+      }
+      const links = [...document.querySelectorAll(".guide-nav ol a")];
+      const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          for (const link of links) link.classList.toggle("active", link.getAttribute("href") === "#" + entry.target.id);
+        }
+      }, { rootMargin: "-20% 0px -70% 0px" });
+      for (const section of document.querySelectorAll(".step")) observer.observe(section);
+    </script>
+  </body>
+</html>
