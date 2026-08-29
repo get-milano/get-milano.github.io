@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Getting started · Milano</title>
+    <meta
+      name="description"
+      content="Add Milano to an existing iOS app in eight steps: scaffold a producer folder with the CLI, declare a vocabulary, write a banner document, generate Swift bindings, bridge your SwiftUI views, and render it."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Ezequiel (Kimi) Aceto" />
+    <meta name="theme-color" content="#fdf8fa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1d151b" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="canonical" href="https://get-milano.dev/getting-started/" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://get-milano.dev/getting-started/" />
+    <meta property="og:site_name" content="Milano" />
+    <meta property="og:title" content="Getting started with Milano on iOS" />
+    <meta
+      property="og:description"
+      content="From an empty folder to a banner rendered by your own SwiftUI views, with the Milano CLI doing the checking."
+    />
+    <meta property="og:image" content="https://get-milano.dev/og-cover.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Fragment+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="shell">
+        <a class="wordmark" href="/"><img src="/get-milano.png" alt="" width="22" height="22" />Milano<span class="dot">.</span></a>
+        <nav aria-label="Main">
+          <a href="/getting-started/">Getting started</a>
+          <a href="/specs/">Specs</a>
+          <a href="/sdk/">SDK</a>
+          <a href="/playground/">Playground</a>
+          <a href="https://github.com/get-milano">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <article class="guide rail">
+        <div class="shell">
+          <div class="eyebrow">// tutorial · iOS · about thirty minutes</div>
+          <h1>Add Milano to an app you already have.</h1>
+          <p class="lede">
+            You will end with a promotional banner, an image, a title, a line of copy, and a button,
+            described in a JSON document and rendered by your own SwiftUI views. The document is
+            checked by the same gate the app runs, so what passes on your machine renders on the
+            device, and changing the banner later means publishing a new document, not a new build.
+          </p>
+
+          <h2>What you need</h2>
+          <ul>
+            <li>An iOS app in Xcode 16 or newer, on Swift 6.</li>
+            <li>Node 20 or newer: the Milano command line, <code>@get-milano/cli</code>, runs on it. Nothing from Node ends up in the app.</li>
+            <li>Ten minutes of reading, twenty of typing. Every command below is copy-pasteable, and every file is shown whole.</li>
+          </ul>
+          <p>
+            Two roles appear in the steps. The <strong>producer</strong> writes the vocabulary and the documents;
+            the <strong>app</strong> registers a view per vocabulary type and renders whatever passes the gate.
+            In a small team both are you, and the folder layout below keeps them apart anyway, because the
+            documents will outlive any one build of the app.
+          </p>
+
+          <h2><span class="step">1.</span>Start the producer folder</h2>
+          <p>
+            Inside the app's repository, next to the Xcode project, let the CLI scaffold a folder for the
+            documents:
+          </p>
+          <pre><code class="sh">cd MyApp
+npx @get-milano/cli init milano --name promo
+cd milano &amp;&amp; npm install &amp;&amp; npm run check</code></pre>
+          <p>
+            <code>milano init</code> writes a working producer setup and <code>npm run check</code> proves
+            it: the schema for your editor is regenerated and every document is validated with the gate the
+            engines run. The folder contains:
+          </p>
+          <table>
+            <tr><th>File</th><th>What it is</th></tr>
+            <tr><td><code>vocabulary.json</code></td><td>The contract between producer and app: component types, their properties and events, the custom actions.</td></tr>
+            <tr><td><code>documents/welcome.json</code></td><td>A first document using the starter vocabulary. You will add the banner next to it.</td></tr>
+            <tr><td><code>documents.schema.json</code>, <code>.vscode/settings.json</code></td><td>The document schema specialized to your vocabulary, and the editor settings that point at it, so typos get red squiggles as you type.</td></tr>
+            <tr><td><code>package.json</code></td><td><code>validate</code>, <code>schema</code>, and <code>check</code> scripts running the CLI.</td></tr>
+            <tr><td><code>AGENTS.md</code>, <code>CLAUDE.md</code>, <code>.claude/skills/</code></td><td>The authoring rules for an AI agent working in the folder, and the instruction to run the check after every change.</td></tr>
+          </table>
+
+          <h2><span class="step">2.</span>Declare the vocabulary</h2>
+          <p>
+            The vocabulary names what documents may use. The banner needs a column, text, an image, and a
+            button, plus one action for the button to request. Replace <code>vocabulary.json</code> with:
+          </p>
+          <div class="file">milano/vocabulary.json</div>
+          <pre><code class="json">{
+  &quot;milano&quot;: &quot;2.0.0&quot;,
+  &quot;name&quot;: &quot;promo&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;components&quot;: {
+    &quot;Column&quot;: { &quot;children&quot;: true },
+    &quot;Text&quot;: {
+      &quot;properties&quot;: {
+        &quot;text&quot;: &quot;string&quot;,
+        &quot;role&quot;: { &quot;enum&quot;: [&quot;title&quot;, &quot;body&quot;] }
+      }
+    },
+    &quot;Image&quot;: {
+      &quot;properties&quot;: {
+        &quot;url&quot;: &quot;string&quot;,
+        &quot;height&quot;: &quot;int?&quot;,
+        &quot;cornerRadius&quot;: &quot;int?&quot;
+      }
+    },
+    &quot;Button&quot;: {
+      &quot;properties&quot;: {
+        &quot;label&quot;: &quot;string&quot;,
+        &quot;enabled&quot;: &quot;bool&quot;
+      },
+      &quot;events&quot;: { &quot;tap&quot;: null }
+    }
+  },
+  &quot;actions&quot;: {
+    &quot;openUrl&quot;: { &quot;parameters&quot;: { &quot;url&quot;: &quot;string&quot; } }
+  }
+}</code></pre>
+          <p>
+            Each property has a type: <code>"int?"</code> is an optional integer, the <code>enum</code> is a
+            closed set of values, and <code>"tap": null</code> declares an event with no payload. The action
+            takes one parameter. Run <code>npm run check</code> again: the schema follows the new vocabulary,
+            and <code>welcome.json</code> still validates, since everything it used is still declared.
+          </p>
+
+          <h2><span class="step">3.</span>Write the banner</h2>
+          <div class="file">milano/documents/banner.json</div>
+          <pre><code class="json">{
+  &quot;version&quot;: &quot;2.0.0&quot;,
+  &quot;vocabulary&quot;: { &quot;name&quot;: &quot;promo&quot;, &quot;min&quot;: &quot;1.0.0&quot; },
+  &quot;context&quot;: { &quot;userName&quot;: &quot;string&quot; },
+  &quot;root&quot;: {
+    &quot;type&quot;: &quot;Column&quot;,
+    &quot;id&quot;: &quot;banner&quot;,
+    &quot;children&quot;: [
+      {
+        &quot;type&quot;: &quot;Image&quot;,
+        &quot;properties&quot;: {
+          &quot;url&quot;: &quot;https://images.example.com/summer.jpg&quot;,
+          &quot;height&quot;: 160,
+          &quot;cornerRadius&quot;: 12
+        }
+      },
+      {
+        &quot;type&quot;: &quot;Text&quot;,
+        &quot;properties&quot;: {
+          &quot;text&quot;: { &quot;$expr&quot;: &quot;concat(&#x27;Summer sale, &#x27;, context.userName)&quot; },
+          &quot;role&quot;: &quot;title&quot;
+        }
+      },
+      {
+        &quot;type&quot;: &quot;Text&quot;,
+        &quot;properties&quot;: {
+          &quot;text&quot;: &quot;Twenty percent off every espresso machine until Sunday.&quot;,
+          &quot;role&quot;: &quot;body&quot;
+        }
+      },
+      {
+        &quot;type&quot;: &quot;Button&quot;,
+        &quot;id&quot;: &quot;cta&quot;,
+        &quot;properties&quot;: { &quot;label&quot;: &quot;See the offer&quot;, &quot;enabled&quot;: true },
+        &quot;on&quot;: {
+          &quot;tap&quot;: [ { &quot;action&quot;: &quot;openUrl&quot;, &quot;url&quot;: &quot;https://shop.example.com/sale&quot; } ]
+        }
+      }
+    ]
+  },
+  &quot;metadata&quot;: { &quot;campaign&quot;: &quot;summer-2026&quot; }
+}</code></pre>
+          <p>
+            Three things to notice. The title is an <strong>expression</strong>: the <code>$expr</code>
+            wrapper reads <code>context.userName</code>, a value the app injects, and the document declares
+            that it needs it under <code>context</code>. The button's <code>on.tap</code> binds the event to
+            the <code>openUrl</code> action with its parameter. And <code>vocabulary.min</code> says which
+            vocabulary the document was written for, so an app holding an older one fails the build with a
+            typed error instead of rendering the wrong thing.
+          </p>
+          <pre><code class="sh">npm run check
+documents/banner.json: valid
+documents/welcome.json: valid</code></pre>
+          <p>
+            Try breaking it: change the title's <code>role</code> to <code>"headline"</code> and run the
+            check. The gate answers with the rule it applied, the node (by path, since that node has no
+            <code>id</code>), and what it expected:
+          </p>
+          <pre><code class="sh">documents/banner.json: SchemaViolation: schema violation (property-type) at root/children[1]: expected enum, found string</code></pre>
+          <p>
+            That message is the same one the app would report, which is the point of running it here first.
+            Put the <code>role</code> back.
+          </p>
+
+          <h2><span class="step">4.</span>Generate the Swift bindings</h2>
+          <p>
+            The vocabulary is machine-readable, so the app does not have to read properties by string. One
+            command turns it into typed Swift, written straight into the app's source tree:
+          </p>
+          <pre><code class="sh">npx milano bindings vocabulary.json \
+    --swift-prefix Promo \
+    --swift-out ../MyApp/Milano/PromoBindings.swift</code></pre>
+          <p>
+            The file holds one wrapper per component (<code>PromoTextNode</code> with <code>text</code> and
+            <code>role</code>, <code>PromoImageNode</code>, <code>PromoButtonNode</code> with
+            <code>emitTap()</code>), a Swift enum per declared enum (<code>PromoTextRole</code>), an
+            exhaustive <code>PromoAction</code> with an <code>unrecognized</code> case, and
+            <code>PromoVocabulary.assertMatches</code>. A property the vocabulary declares non-optional is a
+            non-optional Swift property: the gate guarantees it is there. Commit the file, and regenerate it
+            whenever the vocabulary changes; the compiler then lists every place in the app the change
+            touches.
+          </p>
+
+          <h2><span class="step">5.</span>Add the SDK to the app</h2>
+          <p>
+            In Xcode, File, Add Package Dependencies, and enter the repository URL; choose "Up to Next
+            Major" from <code>2.0.0</code> and add the <code>MilanoSDK</code> product to the app target. In a
+            <code>Package.swift</code> it is:
+          </p>
+          <pre><code class="swift">dependencies: [
+    .package(url: &quot;https://github.com/get-milano/sdk.git&quot;, from: &quot;2.0.0&quot;)
+]</code></pre>
+          <p>
+            A tagged release resolves to a prebuilt, signed <code>MilanoSDK.xcframework</code>. Then add
+            <code>milano/vocabulary.json</code> and <code>milano/documents/banner.json</code> to the app
+            target as bundle resources (drag them into the project and tick the target), so the app can read
+            them until you serve them from a server in step 8.
+          </p>
+
+          <h2><span class="step">6.</span>Bridge your views</h2>
+          <p>
+            A renderer is one function: node in, view out. Each one reads the typed node and returns a view
+            the app already has, or plain SwiftUI, as here. Milano never draws anything; this file is where
+            your design system meets the document.
+          </p>
+          <div class="file">MyApp/Milano/PromoBridge.swift</div>
+          <pre><code class="swift">import MilanoSDK
+import SwiftUI
+
+/// The bridge: one renderer per vocabulary type, each mapping a typed node
+/// onto a view the app already has. Milano draws nothing itself.
+enum PromoBridge {
+    static func registry() -&gt; MilanoRegistry {
+        var registry = MilanoRegistry()
+        registry.register(ColumnRenderer(), for: &quot;Column&quot;)
+        registry.register(TextRenderer(), for: &quot;Text&quot;)
+        registry.register(ImageRenderer(), for: &quot;Image&quot;)
+        registry.register(ButtonRenderer(), for: &quot;Button&quot;)
+        return registry
+    }
+}
+
+final class ColumnRenderer: MilanoRenderer {
+    func render(_ node: MilanoNode) -&gt; AnyView {
+        AnyView(
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(node.children) { $0 }
+            }
+            .padding(16)
+        )
+    }
+}
+
+final class TextRenderer: MilanoRenderer {
+    func render(_ node: MilanoNode) -&gt; AnyView {
+        let text = PromoTextNode(node)
+        switch text.role {
+        case .title:
+            return AnyView(Text(text.text).font(.title2.bold()))
+        case .body:
+            return AnyView(Text(text.text).font(.body).foregroundStyle(.secondary))
+        }
+    }
+}
+
+final class ImageRenderer: MilanoRenderer {
+    func render(_ node: MilanoNode) -&gt; AnyView {
+        let image = PromoImageNode(node)
+        return AnyView(
+            AsyncImage(url: URL(string: image.url)) { phase in
+                if case .success(let loaded) = phase {
+                    loaded.resizable().scaledToFill()
+                } else {
+                    Color.gray.opacity(0.2)
+                }
+            }
+            .frame(height: image.height.map(CGFloat.init))
+            .clipShape(RoundedRectangle(cornerRadius: CGFloat(image.cornerRadius ?? 0)))
+        )
+    }
+}
+
+final class ButtonRenderer: MilanoRenderer {
+    func render(_ node: MilanoNode) -&gt; AnyView {
+        let button = PromoButtonNode(node)
+        return AnyView(
+            Button(button.label) { button.emitTap() }
+                .buttonStyle(.borderedProminent)
+                .disabled(!button.enabled)
+        )
+    }
+}</code></pre>
+          <p>
+            <code>node.children</code> are the column's materialized children, already views: the container
+            only places them. The button's <code>emitTap()</code> puts the event into Milano's dispatch, which
+            runs the actions the document bound to it.
+          </p>
+
+          <h2><span class="step">7.</span>Create the engine and show the banner</h2>
+          <p>
+            One engine per app, created once with the vocabulary and the registry, then a builder per
+            surface: the document, the context the document declared, and the handler for the actions it may
+            request.
+          </p>
+          <div class="file">MyApp/Milano/PromoBanner.swift</div>
+          <pre><code class="swift">import MilanoSDK
+import SwiftUI
+
+/// One engine for the whole app, created once with the vocabulary the
+/// bridge implements; every screen builds its views from it.
+enum Milano {
+    static let engine: MilanoEngine = {
+        do {
+            let engine = try MilanoEngine(
+                vocabularyJSON: resource(&quot;vocabulary&quot;),
+                registry: PromoBridge.registry())
+            // Refuses to run against a vocabulary the bindings were not generated from.
+            PromoVocabulary.assertMatches(engine)
+            return engine
+        } catch {
+            fatalError(&quot;Milano setup failed: \(error)&quot;)
+        }
+    }()
+
+    /// The banner from the bundled document. A document fetched from your
+    /// server is the same call with the received bytes.
+    static func bannerBuilder(document: Data = resource(&quot;banner&quot;)) -&gt; MilanoViewBuilder {
+        engine.viewBuilder(document: document)
+            .context([&quot;userName&quot;: .string(&quot;Ada&quot;)])
+            .actionHandler(handle(_:))
+            .label(&quot;banner&quot;)
+    }
+
+    /// The single funnel for custom actions. The gate proved `url` is a
+    /// string; whether it is safe to open is the app&#x27;s decision.
+    @Sendable static func handle(_ action: MilanoAction) async throws -&gt; MilanoValue? {
+        switch PromoAction(action) {
+        case .openUrl(let url):
+            guard let url = URL(string: url), url.scheme == &quot;https&quot; else { return nil }
+            await open(url)
+        case .unrecognized(let action):
+            print(&quot;unhandled action \(action.name)&quot;)
+        }
+        return nil
+    }
+
+    @MainActor private static func open(_ url: URL) {
+        UIApplication.shared.open(url)
+    }
+
+    private static func resource(_ name: String) -&gt; Data {
+        guard let url = Bundle.main.url(forResource: name, withExtension: &quot;json&quot;),
+              let data = try? Data(contentsOf: url)
+        else { fatalError(&quot;\(name).json is not in the app bundle&quot;) }
+        return data
+    }
+}
+
+/// Drop it into any screen: the banner renders where this view sits.
+struct PromoBannerView: View {
+    var body: some View {
+        MilanoHost(builder: Milano.bannerBuilder()) {
+            ProgressView()
+        } failure: { _ in
+            EmptyView()   // an optional surface fails to nothing
+        }
+    }
+}</code></pre>
+          <p>
+            Put <code>PromoBannerView()</code> wherever the banner belongs, a home screen, a list header,
+            a sheet. Build and run: the image loads, the title reads "Summer sale, Ada", the button opens the
+            offer. The handler is the last capability check: the gate proved <code>url</code> is a string,
+            the app decides that only <code>https</code> leaves it. The <code>failure</code> closure is where a
+            rejected document lands; for an optional surface, nothing is the right thing to show.
+          </p>
+
+          <h2><span class="step">8.</span>Change it without a release</h2>
+          <p>
+            Edit <code>banner.json</code>, new copy, a different image, a second paragraph, and run
+            <code>npm run check</code>. Nothing in the app changes. Serve the document from wherever the app
+            fetches things and hand the bytes to the same builder:
+          </p>
+          <pre><code class="swift">let (data, _) = try await URLSession.shared.data(from: bannerURL)
+let builder = Milano.bannerBuilder(document: data)</code></pre>
+          <p>
+            Keep the previous version of every document on the server; rolling back is serving the old
+            file. When the vocabulary itself changes (a new component, a new property), bump its version
+            and let the CLI say whether the bump is right before you publish:
+          </p>
+          <pre><code class="sh">npx milano diff vocabulary-1.0.0.json vocabulary.json
+ADDITIVE  Text property maxLines added
+verdict: ok (0 breaking, 1 additive)</code></pre>
+          <p>
+            Additive changes need a minor bump, breaking ones a major, and documents declare the minimum they
+            need, so old apps and new documents never meet by accident. Regenerate the bindings, add the
+            renderer for anything new, and ship the app on its own schedule.
+          </p>
+
+          <div class="aside">
+            <p>
+              <strong>Compose or React instead?</strong> The producer side is identical; the app side differs
+              only in the renderer and host types. <code>milano bindings</code> writes Kotlin
+              (<code>--kotlin-out</code>) and TypeScript (<code>--ts-out</code>) too, and the sample apps show
+              the same banner on all four platforms.
+            </p>
+          </div>
+
+          <h2>Where next</h2>
+          <div class="next">
+            <a href="/sdk/bridge">
+              <strong>Creating a bridge</strong>
+              <span>The full renderer contract, unknown-type policies, generated bindings as a build step.</span>
+            </a>
+            <a href="/sdk/producing">
+              <strong>Producing documents</strong>
+              <span>The producer's workflow: the loop, vocabulary evolution, CI, working with an AI agent.</span>
+            </a>
+            <a href="/sdk/documents">
+              <strong>Writing documents</strong>
+              <span>The document format: types, expressions, actions, lists with <code>$repeat</code>, forms.</span>
+            </a>
+            <a href="/sdk/samples">
+              <strong>Samples</strong>
+              <span>Four apps rendering the same documents on SwiftUI, Compose, Compose Desktop, and React Native.</span>
+            </a>
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer class="rail">
+      <div class="shell">
+        <span>Milano · Document-Driven UI</span>
+        <a href="https://github.com/get-milano/specs">specs</a>
+        <a href="https://github.com/get-milano/sdk">sdk</a>
+        <a href="https://github.com/get-milano/playground">playground</a>
+        <span class="spacer"></span>
+        <span>Made with ♥️ by <a href="https://kimi.blog">Ezequiel (Kimi) Aceto</a></span>
+      </div>
+    </footer>
+  </body>
+</html>
