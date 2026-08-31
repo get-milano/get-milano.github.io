@@ -61,7 +61,8 @@
               <li><a href="#step-5">Add the SDK and the producer files to the app</a></li>
               <li><a href="#step-6">Bridge your views</a></li>
               <li><a href="#step-7">Create the engine and show the banner</a></li>
-              <li><a href="#step-8">Change the banner</a></li>
+              <li><a href="#step-8">Everything else the contract gives you</a></li>
+              <li><a href="#step-9">Change the banner</a></li>
             </ol>
             <div class="plain"><a href="#next">Where next</a></div>
           </nav>
@@ -78,7 +79,7 @@
           <div class="pills">
             <span class="pill">Node 20+ for the CLI</span>
             <span class="pill">about 30 minutes</span>
-            <span class="pill">SDK 2.0</span>
+            <span class="pill">SDK 2.1</span>
           </div>
           <p class="pick">Your app is built with</p>
           <div class="platform-switch" role="tablist" aria-label="Your app"><button type="button" role="tab" data-platform="swiftui" aria-selected="true">SwiftUI</button><button type="button" role="tab" data-platform="compose" aria-selected="false">Compose</button><button type="button" role="tab" data-platform="react" aria-selected="false">React Native</button></div>
@@ -130,9 +131,9 @@
 
             <p>The vocabulary names what documents may use. The banner needs a column, text, an image, and a button, plus one action for the button to request. Replace <code>vocabulary.json</code> with:</p>
             <figure class="code"><figcaption><span class="lang">JSON</span><span class="path">milano/vocabulary.json</span><button type="button" class="copy">Copy</button></figcaption><pre><code>{
-  <span class="tk-key">&quot;milano&quot;</span>: <span class="tk-str">&quot;2.0.0&quot;</span>,
+  <span class="tk-key">&quot;milano&quot;</span>: <span class="tk-str">&quot;2.1.0&quot;</span>,
   <span class="tk-key">&quot;name&quot;</span>: <span class="tk-str">&quot;promo&quot;</span>,
-  <span class="tk-key">&quot;version&quot;</span>: <span class="tk-str">&quot;1.0.0&quot;</span>,
+  <span class="tk-key">&quot;version&quot;</span>: <span class="tk-str">&quot;1.1.0&quot;</span>,
   <span class="tk-key">&quot;components&quot;</span>: {
     <span class="tk-key">&quot;Column&quot;</span>: { <span class="tk-key">&quot;children&quot;</span>: <span class="tk-kw">true</span> },
     <span class="tk-key">&quot;Text&quot;</span>: {
@@ -158,6 +159,9 @@
   },
   <span class="tk-key">&quot;actions&quot;</span>: {
     <span class="tk-key">&quot;openUrl&quot;</span>: { <span class="tk-key">&quot;parameters&quot;</span>: { <span class="tk-key">&quot;url&quot;</span>: <span class="tk-str">&quot;string&quot;</span> } }
+  },
+  <span class="tk-key">&quot;functions&quot;</span>: {
+    <span class="tk-key">&quot;formatMoney&quot;</span>: { <span class="tk-key">&quot;arguments&quot;</span>: [<span class="tk-str">&quot;int&quot;</span>, <span class="tk-str">&quot;string&quot;</span>], <span class="tk-key">&quot;returns&quot;</span>: <span class="tk-str">&quot;string&quot;</span> }
   }
 }</code></pre></figure>
             <p>Each property has a type: <code>"int?"</code> is an optional integer, the <code>enum</code> is a closed set of values, and <code>"tap": null</code> declares an event with no payload. The action takes one parameter. Run <code>npm run check</code> again: the schema follows the new vocabulary, and <code>welcome.json</code> still validates, since everything it used is still declared.</p>
@@ -167,7 +171,7 @@
             <div class="step-head"><span class="badge">3</span><h2>Write the banner</h2></div>
 
             <figure class="code"><figcaption><span class="lang">JSON</span><span class="path">milano/documents/banner.json</span><button type="button" class="copy">Copy</button></figcaption><pre><code>{
-  <span class="tk-key">&quot;version&quot;</span>: <span class="tk-str">&quot;2.0.0&quot;</span>,
+  <span class="tk-key">&quot;version&quot;</span>: <span class="tk-str">&quot;2.1.0&quot;</span>,
   <span class="tk-key">&quot;vocabulary&quot;</span>: { <span class="tk-key">&quot;name&quot;</span>: <span class="tk-str">&quot;promo&quot;</span>, <span class="tk-key">&quot;min&quot;</span>: <span class="tk-str">&quot;1.0.0&quot;</span> },
   <span class="tk-key">&quot;context&quot;</span>: { <span class="tk-key">&quot;userName&quot;</span>: <span class="tk-str">&quot;string&quot;</span> },
   <span class="tk-key">&quot;root&quot;</span>: {
@@ -185,7 +189,7 @@
       {
         <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Text&quot;</span>,
         <span class="tk-key">&quot;properties&quot;</span>: {
-          <span class="tk-key">&quot;text&quot;</span>: { <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;concat(&#x27;Summer sale, &#x27;, context.userName)&quot;</span> },
+          <span class="tk-key">&quot;text&quot;</span>: { <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;$concat(&#x27;Summer sale, &#x27;, context.userName)&quot;</span> },
           <span class="tk-key">&quot;role&quot;</span>: <span class="tk-str">&quot;title&quot;</span>
         }
       },
@@ -243,23 +247,18 @@
 
           <section class="step" id="step-5">
             <div class="step-head"><span class="badge">5</span><h2>Add the SDK and the producer files to the app</h2></div>
-<div class="tab" data-platform="swiftui"><p>In Xcode, File, Add Package Dependencies, and enter the repository URL; choose "Up to Next Major" from <code>2.0.0</code> and add the <code>MilanoSDK</code> product to the app target. In a <code>Package.swift</code> it is:</p>
+<div class="tab" data-platform="swiftui"><p>In Xcode, File, Add Package Dependencies, and enter the repository URL; choose "Up to Next Major" from <code>2.1.0</code> and add the <code>MilanoSDK</code> product to the app target. In a <code>Package.swift</code> it is:</p>
             <figure class="code"><figcaption><span class="lang">Swift</span><span class="path">Package.swift</span><button type="button" class="copy">Copy</button></figcaption><pre><code>dependencies: [
-    .package(url: <span class="tk-str">&quot;https://github.com/get-milano/sdk.git&quot;</span>, from: <span class="tk-str">&quot;2.0.0&quot;</span>)
+    .package(url: <span class="tk-str">&quot;https://github.com/get-milano/sdk.git&quot;</span>, from: <span class="tk-str">&quot;2.1.0&quot;</span>)
 ]</code></pre></figure>
             <p>A tagged release resolves to a prebuilt, signed <code>MilanoSDK.xcframework</code>. Then add <code>milano/vocabulary.json</code> and <code>milano/documents/banner.json</code> to the app target: drag them into the project navigator, tick the target, and leave "Copy items if needed" unchecked, so the project references the files where the CLI wrote them. Xcode copies them into the bundle at build time, and an edited document is in the next build.</p></div>
-<div class="tab" data-platform="compose" hidden><p>The engine is on GitHub Packages, whose Maven registry needs a token with <code>read:packages</code> even for public artifacts (put <code>gpr.user</code> and <code>gpr.token</code> in <code>~/.gradle/gradle.properties</code>). In the app module's <code>build.gradle.kts</code>, the dependencies and a copy task that carries the producer folder's files into the assets before every build:</p>
+<div class="tab" data-platform="compose" hidden><p>The engine is on Maven Central, so nothing but <code>mavenCentral()</code> is needed. In the app module's <code>build.gradle.kts</code>, the dependencies and a copy task that carries the producer folder's files into the assets before every build:</p>
             <figure class="code"><figcaption><span class="lang">Gradle</span><span class="path">app/build.gradle.kts</span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-kw">repositories</span> {
-    <span class="tk-kw">maven</span>(<span class="tk-str">&quot;https://maven.pkg.github.com/get-milano/sdk&quot;</span>) {
-        <span class="tk-kw">credentials</span> {
-            username = providers.gradleProperty(<span class="tk-str">&quot;gpr.user&quot;</span>).get()
-            password = providers.gradleProperty(<span class="tk-str">&quot;gpr.token&quot;</span>).get()
-        }
-    }
+    mavenCentral()
 }
 
 <span class="tk-kw">dependencies</span> {
-    <span class="tk-kw">implementation</span>(<span class="tk-str">&quot;dev.get-milano:engine-compose:2.0.0&quot;</span>)
+    <span class="tk-kw">implementation</span>(<span class="tk-str">&quot;dev.get-milano:engine-compose:2.1.0&quot;</span>)
     <span class="tk-kw">implementation</span>(<span class="tk-str">&quot;io.coil-kt:coil-compose:2.7.0&quot;</span>)   <span class="tk-cm">// the image loader the bridge below uses</span>
 }
 
@@ -270,7 +269,7 @@
     <span class="tk-kw">into</span>(<span class="tk-str">&quot;src/main/assets/milano&quot;</span>)
 }
 <span class="tk-kw">tasks</span>.named(<span class="tk-str">&quot;preBuild&quot;</span>) { <span class="tk-kw">dependsOn</span>(copyMilanoDocuments) }</code></pre></figure>
-            <p>Without a token, the release page carries <code>engine-compose-android-2.0.0.aar</code> to drop into <code>libs/</code>, and a checkout of the SDK can be consumed from source with <code>includeBuild</code>. The copy task keeps the app's <code>assets/milano/</code> equal to the two files in <code>milano/</code>, so an edited document is in the next build and nothing is duplicated by hand.</p></div>
+            <p>Two other ways in, if you need them: every release also goes to GitHub Packages (whose Maven registry wants a token with <code>read:packages</code> even for public artifacts), and carries <code>engine-compose-android-2.1.0.aar</code> on the release page to drop into <code>libs/</code>. A checkout of the SDK can be consumed from source with <code>includeBuild</code>. The copy task keeps the app's <code>assets/milano/</code> equal to the two files in <code>milano/</code>, so an edited document is in the next build and nothing is duplicated by hand.</p></div>
 <div class="tab" data-platform="react" hidden><figure class="code"><figcaption><span class="lang">Terminal</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="prompt">$ </span>npm install @get-milano/core @get-milano/react</code></pre></figure>
             <p>Two packages and nothing native: no autolinking, no pod install, because Milano draws nothing. The same two serve React on the web; only the components in the bridge change. The app imports the vocabulary and the banner straight from <code>milano/</code> as JSON modules (<code>resolveJsonModule</code>), which is fine for this document since all its numbers are integers.</p>
             <div class="callout note">
@@ -705,7 +704,252 @@
           </section>
 
           <section class="step" id="step-8">
-            <div class="step-head"><span class="badge">8</span><h2>Change the banner</h2></div>
+            <div class="step-head"><span class="badge">8</span><h2>Everything else the contract gives you</h2></div>
+
+            <p>The banner uses a fraction of what a document can do. Everything below is the same contract, needs no new app code beyond what a feature explicitly asks for, and is documented in full in the <a href="/sdk/">SDK guides</a>.</p>
+            <p>This document is a small basket. It repeats a list with a stable identity per row, edits that list in place, keeps a derived count in step, reacts to being shown, and formats money through a function the app computes:</p>
+            <figure class="code"><figcaption><span class="lang">JSON</span><span class="path">milano/documents/features.json</span><button type="button" class="copy">Copy</button></figcaption><pre><code>{
+  <span class="tk-key">&quot;version&quot;</span>: <span class="tk-str">&quot;2.1.0&quot;</span>,
+  <span class="tk-key">&quot;vocabulary&quot;</span>: {
+    <span class="tk-key">&quot;name&quot;</span>: <span class="tk-str">&quot;promo&quot;</span>,
+    <span class="tk-key">&quot;min&quot;</span>: <span class="tk-str">&quot;1.1.0&quot;</span>
+  },
+  <span class="tk-key">&quot;state&quot;</span>: {
+    <span class="tk-key">&quot;items&quot;</span>: {
+      <span class="tk-key">&quot;array&quot;</span>: {
+        <span class="tk-key">&quot;record&quot;</span>: {
+          <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;string&quot;</span>,
+          <span class="tk-key">&quot;name&quot;</span>: <span class="tk-str">&quot;string&quot;</span>,
+          <span class="tk-key">&quot;cents&quot;</span>: <span class="tk-str">&quot;int&quot;</span>
+        }
+      }
+    },
+    <span class="tk-key">&quot;count&quot;</span>: <span class="tk-str">&quot;int&quot;</span>,
+    <span class="tk-key">&quot;seen&quot;</span>: <span class="tk-str">&quot;bool&quot;</span>
+  },
+  <span class="tk-key">&quot;root&quot;</span>: {
+    <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Column&quot;</span>,
+    <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;basket&quot;</span>,
+    <span class="tk-key">&quot;children&quot;</span>: [
+      {
+        <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Text&quot;</span>,
+        <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;heading&quot;</span>,
+        <span class="tk-key">&quot;properties&quot;</span>: {
+          <span class="tk-key">&quot;text&quot;</span>: {
+            <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;$concat(&#x27;Basket: &#x27;, $str(state.count), &#x27; items&#x27;)&quot;</span>
+          },
+          <span class="tk-key">&quot;role&quot;</span>: <span class="tk-str">&quot;title&quot;</span>
+        }
+      },
+      {
+        <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;$repeat&quot;</span>,
+        <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;rows&quot;</span>,
+        <span class="tk-key">&quot;items&quot;</span>: {
+          <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;state.items&quot;</span>
+        },
+        <span class="tk-key">&quot;as&quot;</span>: <span class="tk-str">&quot;item&quot;</span>,
+        <span class="tk-key">&quot;key&quot;</span>: {
+          <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;item.id&quot;</span>
+        },
+        <span class="tk-key">&quot;children&quot;</span>: [
+          {
+            <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Column&quot;</span>,
+            <span class="tk-key">&quot;children&quot;</span>: [
+              {
+                <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Text&quot;</span>,
+                <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;line&quot;</span>,
+                <span class="tk-key">&quot;properties&quot;</span>: {
+                  <span class="tk-key">&quot;text&quot;</span>: {
+                    <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;$concat(item.name, &#x27; &#x27;, formatMoney(item.cents, &#x27;EUR&#x27;))&quot;</span>
+                  },
+                  <span class="tk-key">&quot;role&quot;</span>: <span class="tk-str">&quot;body&quot;</span>
+                }
+              },
+              {
+                <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Button&quot;</span>,
+                <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;upgrade&quot;</span>,
+                <span class="tk-key">&quot;properties&quot;</span>: {
+                  <span class="tk-key">&quot;label&quot;</span>: <span class="tk-str">&quot;Make it a large&quot;</span>,
+                  <span class="tk-key">&quot;enabled&quot;</span>: <span class="tk-kw">true</span>
+                },
+                <span class="tk-key">&quot;on&quot;</span>: {
+                  <span class="tk-key">&quot;tap&quot;</span>: [
+                    {
+                      <span class="tk-key">&quot;action&quot;</span>: <span class="tk-str">&quot;$update&quot;</span>,
+                      <span class="tk-key">&quot;key&quot;</span>: <span class="tk-str">&quot;items&quot;</span>,
+                      <span class="tk-key">&quot;at&quot;</span>: {
+                        <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;item_index&quot;</span>
+                      },
+                      <span class="tk-key">&quot;field&quot;</span>: <span class="tk-str">&quot;cents&quot;</span>,
+                      <span class="tk-key">&quot;value&quot;</span>: {
+                        <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;item.cents + 50&quot;</span>
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Button&quot;</span>,
+                <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;remove&quot;</span>,
+                <span class="tk-key">&quot;properties&quot;</span>: {
+                  <span class="tk-key">&quot;label&quot;</span>: <span class="tk-str">&quot;Remove&quot;</span>,
+                  <span class="tk-key">&quot;enabled&quot;</span>: <span class="tk-kw">true</span>
+                },
+                <span class="tk-key">&quot;on&quot;</span>: {
+                  <span class="tk-key">&quot;tap&quot;</span>: [
+                    {
+                      <span class="tk-key">&quot;action&quot;</span>: <span class="tk-str">&quot;$remove&quot;</span>,
+                      <span class="tk-key">&quot;key&quot;</span>: <span class="tk-str">&quot;items&quot;</span>,
+                      <span class="tk-key">&quot;at&quot;</span>: {
+                        <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;item_index&quot;</span>
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        <span class="tk-key">&quot;type&quot;</span>: <span class="tk-str">&quot;Button&quot;</span>,
+        <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;add&quot;</span>,
+        <span class="tk-key">&quot;properties&quot;</span>: {
+          <span class="tk-key">&quot;label&quot;</span>: <span class="tk-str">&quot;Add an espresso&quot;</span>,
+          <span class="tk-key">&quot;enabled&quot;</span>: {
+            <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;state.count &lt; 5&quot;</span>
+          }
+        },
+        <span class="tk-key">&quot;on&quot;</span>: {
+          <span class="tk-key">&quot;tap&quot;</span>: [
+            {
+              <span class="tk-key">&quot;action&quot;</span>: <span class="tk-str">&quot;$append&quot;</span>,
+              <span class="tk-key">&quot;key&quot;</span>: <span class="tk-str">&quot;items&quot;</span>,
+              <span class="tk-key">&quot;value&quot;</span>: {
+                <span class="tk-key">&quot;id&quot;</span>: <span class="tk-str">&quot;espresso&quot;</span>,
+                <span class="tk-key">&quot;name&quot;</span>: <span class="tk-str">&quot;Espresso&quot;</span>,
+                <span class="tk-key">&quot;cents&quot;</span>: <span class="tk-num">250</span>
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  <span class="tk-key">&quot;on&quot;</span>: {
+    <span class="tk-key">&quot;appear&quot;</span>: [
+      {
+        <span class="tk-key">&quot;action&quot;</span>: <span class="tk-str">&quot;$set&quot;</span>,
+        <span class="tk-key">&quot;key&quot;</span>: <span class="tk-str">&quot;seen&quot;</span>,
+        <span class="tk-key">&quot;value&quot;</span>: <span class="tk-kw">true</span>
+      }
+    ]
+  },
+  <span class="tk-key">&quot;watch&quot;</span>: {
+    <span class="tk-key">&quot;items&quot;</span>: [
+      {
+        <span class="tk-key">&quot;action&quot;</span>: <span class="tk-str">&quot;$set&quot;</span>,
+        <span class="tk-key">&quot;key&quot;</span>: <span class="tk-str">&quot;count&quot;</span>,
+        <span class="tk-key">&quot;value&quot;</span>: {
+          <span class="tk-expr">&quot;$expr&quot;</span>: <span class="tk-str">&quot;$length(state.items)&quot;</span>
+        }
+      }
+    ]
+  }
+}</code></pre></figure>
+            <table>
+              <tr><th>What it uses</th><th>What it is</th></tr>
+              <tr><td><code>$repeat</code> with <code>key</code></td><td>One template per element of an array. The <code>key</code> makes a row's identity follow the element, so removing the first row does not renumber the rest. Without it, rows are identified by position.</td></tr>
+              <tr><td><code>$append</code>, <code>$remove</code>, <code>$update</code></td><td>Change one element of a list in state: add, drop, or set one field. Inside the template, <code>item_index</code> is the row's position at the moment of the tap, so a row edits itself.</td></tr>
+              <tr><td><code>watch</code></td><td>Action lists that run when a state key changes, as part of the change. Here it keeps <code>count</code> in step with the list. A watch never triggers another watch, so there is no cascade to reason about.</td></tr>
+              <tr><td><code>on</code></td><td>Lifecycle bindings: <code>appear</code> when the host says the view is on screen, <code>disappear</code> when it leaves. The host container delivers both; Milano infers nothing.</td></tr>
+              <tr><td><code>formatMoney(...)</code></td><td>A function your app computes, declared in the vocabulary and called by its bare name. The contract's own functions carry a <code>$</code> (<code>$concat</code>, <code>$str</code>, <code>$length</code>), so yours can be named anything, <code>round</code> included, without either shadowing the other.</td></tr>
+            </table>
+            <h3 class="plain">Declaring and using your own functions</h3>
+            <p>Formatting is the usual reason: money, dates, plurals, units. The document should not carry locale rules, and Milano should not guess them, so the app computes them. Declare the function in the vocabulary, with its argument types and what it returns:</p>
+            <figure class="code"><figcaption><span class="lang">JSON</span><span class="path">milano/vocabulary.json</span><button type="button" class="copy">Copy</button></figcaption><pre><code>{
+  <span class="tk-key">&quot;functions&quot;</span>: {
+    <span class="tk-key">&quot;formatMoney&quot;</span>: { <span class="tk-key">&quot;arguments&quot;</span>: [<span class="tk-str">&quot;int&quot;</span>, <span class="tk-str">&quot;string&quot;</span>], <span class="tk-key">&quot;returns&quot;</span>: <span class="tk-str">&quot;string&quot;</span> }
+  }
+}</code></pre></figure>
+            <p>Then give the engine one function handler. It answers every function the vocabulary declares, for every view that engine builds:</p>
+            <div class="platform-switch" role="tablist" aria-label="Your app"><button type="button" role="tab" data-platform="swiftui" aria-selected="true">SwiftUI</button><button type="button" role="tab" data-platform="compose" aria-selected="false">Compose</button><button type="button" role="tab" data-platform="react" aria-selected="false">React Native</button></div>
+            <div class="tab" data-platform="swiftui"><figure class="code"><figcaption><span class="lang">Swift</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-cm">// The engine takes one function handler; it answers every function the</span>
+<span class="tk-cm">// vocabulary declares, for every view built from this engine.</span>
+<span class="tk-kw">let</span> engine = <span class="tk-kw">try</span> <span class="tk-type">MilanoEngine</span>(
+    vocabularyJson: vocabulary,
+    registry: <span class="tk-type">PromoBridge</span>.registry(),
+    functionHandler: <span class="tk-type">MilanoClosureFunctionHandler</span> { call <span class="tk-kw">in</span>
+        <span class="tk-kw">switch</span> call.name {
+        <span class="tk-kw">case</span> <span class="tk-str">&quot;formatMoney&quot;</span>:
+            <span class="tk-kw">let</span> cents = call.arguments[<span class="tk-num">0</span>].intValue ?? <span class="tk-num">0</span>
+            <span class="tk-kw">let</span> currency = call.arguments[<span class="tk-num">1</span>].stringValue ?? <span class="tk-str">&quot;EUR&quot;</span>
+            <span class="tk-kw">let</span> formatter = <span class="tk-type">NumberFormatter</span>()
+            formatter.numberStyle = .currency
+            formatter.currencyCode = currency
+            <span class="tk-kw">let</span> amount = <span class="tk-type">NSNumber</span>(value: <span class="tk-type">Double</span>(cents) / <span class="tk-num">100</span>)
+            <span class="tk-kw">return</span> .string(formatter.string(from: amount) ?? <span class="tk-str">&quot;&quot;</span>)
+        <span class="tk-kw">default</span>:
+            <span class="tk-kw">return</span> .null
+        }
+    }
+)</code></pre></figure></div>
+<div class="tab" data-platform="compose" hidden><figure class="code"><figcaption><span class="lang">Kotlin</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-cm">// The engine takes one function handler; it answers every function the</span>
+<span class="tk-cm">// vocabulary declares, for every view built from this engine.</span>
+<span class="tk-kw">val</span> engine =
+    <span class="tk-type">MilanoEngine</span>(
+        vocabularyJson = vocabulary,
+        registry = promoRegistry(),
+        functionHandler =
+            <span class="tk-type">MilanoFunctionHandler</span> { call -&gt;
+                <span class="tk-kw">when</span> (call.name) {
+                    <span class="tk-str">&quot;formatMoney&quot;</span> -&gt; {
+                        <span class="tk-kw">val</span> cents = call.arguments[<span class="tk-num">0</span>].intOrNull ?: <span class="tk-num">0</span><span class="tk-type">L</span>
+                        <span class="tk-kw">val</span> currency = call.arguments[<span class="tk-num">1</span>].stringOrNull ?: <span class="tk-str">&quot;EUR&quot;</span>
+                        <span class="tk-kw">val</span> format = <span class="tk-type">NumberFormat</span>.getCurrencyInstance()
+                        format.currency = <span class="tk-type">Currency</span>.getInstance(currency)
+                        <span class="tk-type">MilanoValue</span>.<span class="tk-type">StringValue</span>(format.format(cents / <span class="tk-num">100</span>.<span class="tk-num">0</span>))
+                    }
+                    <span class="tk-kw">else</span> -&gt; <span class="tk-kw">null</span>
+                }
+            },
+    )</code></pre></figure></div>
+<div class="tab" data-platform="react" hidden><figure class="code"><figcaption><span class="lang">TypeScript</span><span class="path"></span><button type="button" class="copy">Copy</button></figcaption><pre><code><span class="tk-cm">// The engine takes one function handler; it answers every function the</span>
+<span class="tk-cm">// vocabulary declares, for every view built from this engine.</span>
+<span class="tk-kw">const</span> engine = <span class="tk-kw">new</span> <span class="tk-type">MilanoEngine</span>({
+  vocabularyJson: vocabulary,
+  registry: promoRegistry(),
+  functionHandler: (call) =&gt; {
+    <span class="tk-kw">if</span> (call.name !== <span class="tk-str">&quot;formatMoney&quot;</span>) <span class="tk-kw">return</span> <span class="tk-kw">null</span>;
+    <span class="tk-kw">const</span> [cents, currency] = call.arguments;
+    <span class="tk-kw">return</span> <span class="tk-type">MilanoValue</span>.string(
+      <span class="tk-kw">new</span> <span class="tk-type">Intl</span>.<span class="tk-type">NumberFormat</span>(undefined, {
+        style: <span class="tk-str">&quot;currency&quot;</span>,
+        currency: currency.stringValue ?? <span class="tk-str">&quot;EUR&quot;</span>,
+      }).format(<span class="tk-type">Number</span>(cents.intValue ?? <span class="tk-num">0</span>n) / <span class="tk-num">100</span>),
+    );
+  },
+});</code></pre></figure></div>
+            <p>Documents then call it like any other function: <code>formatMoney(item.cents, 'EUR')</code>. The gate checks the call against the declaration, so a wrong argument count or type fails the build rather than the screen. A function must be <strong>pure over its arguments</strong>: the same arguments always give the same value. That is why the locale is passed in from context rather than read inside the handler, and it is what lets the engine call it whenever a dependency changes.</p>
+            <div class="callout note">
+              <div class="title">While you are still writing documents</div>
+              <p><code>npm run check</code> has no app to ask, so it answers every declared function with the zero value of its return type: an empty string here. The document is still fully type-checked; only the formatting is missing. The <a href="/playground/">playground</a> answers a small library of functions if you want to see values.</p>
+            </div>
+            <h3 class="plain">The rest, in one place</h3>
+            <table>
+              <tr><th>Feature</th><th>What it is for</th><th>Guide</th></tr>
+              <tr><td>Typed results and failures</td><td>An action's handler answers with a value the document reads as <code>result</code>, or fails with a reason it reads as <code>failure</code>, so error copy lives in the document.</td><td><a href="/sdk/documents#failure-payloads">Writing documents</a></td></tr>
+              <tr><td>Dispatch identity</td><td>Every dispatched action carries a process-unique <code>dispatchId</code>: the idempotency key for the request your handler makes.</td><td><a href="/sdk/bridge#the-action-funnel">Creating a bridge</a></td></tr>
+              <tr><td>Document replacement</td><td><code>view.replace(document)</code> swaps a live view's document, keeping the state whose declaration is unchanged: hot reload, or a refreshed document, without losing what the user typed.</td><td><a href="/sdk/bridge#replacing-a-document">Creating a bridge</a></td></tr>
+              <tr><td>Capability grants</td><td>A surface can narrow the actions a document may dispatch, or declare extra ones for itself, so a banner cannot reach what a settings screen can.</td><td><a href="/sdk/bridge#granting-capabilities-per-surface">Creating a bridge</a></td></tr>
+              <tr><td>Context that changes</td><td>A context handle pushes new values into every live view: sign-in, feature flags, locale.</td><td><a href="/sdk/guidelines">Guidelines</a></td></tr>
+              <tr><td>Analytics</td><td>Impressions, taps, dispatches, and outcomes arrive as structured records, with no document or renderer involvement.</td><td><a href="/sdk/analytics">Analytics</a></td></tr>
+              <tr><td>Guardrails</td><td>Every rejection rule, every runtime occurrence, the limits, and the unknown-type policies.</td><td><a href="/sdk/guardrails">Guardrails</a></td></tr>
+            </table>
+          </section>
+
+          <section class="step" id="step-9">
+            <div class="step-head"><span class="badge">9</span><h2>Change the banner</h2></div>
 
             <p>Edit <code>milano/documents/banner.json</code>: new copy, a different image, a second line of text. Run <code>npm run check</code>, rebuild the app, and the change is on screen. No app code moved, because the app bundles the producer folder's files: from here on, changing what the banner says is a change in <code>milano/</code>, checked by the CLI, and the app is rebuilt with it.</p>
             <p>When the vocabulary itself changes (a new component, a new property), bump its version and let the CLI say whether the bump is right before the app team depends on it:</p>

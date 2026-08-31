@@ -1,4 +1,4 @@
-import html, pathlib, re, sys
+import html, json, pathlib, re, sys
 S = pathlib.Path(__file__).resolve().parent
 SITE = pathlib.Path(sys.argv[1])
 E = html.escape
@@ -76,7 +76,48 @@ BIND = {
  "react": "npx milano bindings vocabulary.json \\" + NL + "    --ts-prefix Promo \\" + NL + "    --ts-out ../src/milano/bindings.ts",
 }
 GRADLE = read("app.build.gradle.kts")
-SPM = "dependencies: [" + NL + '    .package(url: "https://github.com/get-milano/sdk.git", from: "2.0.0")' + NL + "]"
+SPM = "dependencies: [" + NL + '    .package(url: "https://github.com/get-milano/sdk.git", from: "2.1.0")' + NL + "]"
+
+def validated():
+    """Every document here, through the reference gate, against this
+    vocabulary. The page teaches what the gate accepts or it teaches
+    nothing; the specs' checker is the same one the suite runs."""
+    import os
+    specs = pathlib.Path(os.environ.get("MILANO_SPECS_DIR", S.parents[2] / "specs"))
+    checker = specs / "tools" / "reference_check.py"
+    if not checker.is_file():
+        print(f"note: no specs checkout at {specs}; documents not validated")
+        return
+    sys.path.insert(0, str(specs / "tools"))
+    import reference_check as rc
+    vocabulary = json.loads(read("vocabulary.json"))
+    for path in sorted((S / "documents").glob("*.json")):
+        document = json.loads(path.read_text())
+        gate = rc.ReferenceGate(vocabulary, "fail")
+        # No app here, so a declared function answers with the zero value of
+        # its return type, as `milano validate` does for a producer.
+        gate.function_results = None
+        gate.build({"name": path.name, "document": document,
+                    "context": rc.synthesized_values(document.get("context", {})),
+                    "state": rc.synthesized_values(document.get("state", {}))})
+    print("validated", len(list((S / "documents").glob("*.json"))), "documents")
+
+
+validated()
+
+FUNCTION_DECLARATION = ("{" + NL +
+ '  "functions": {' + NL +
+ '    "formatMoney": { "arguments": ["int", "string"], "returns": "string" }' + NL +
+ "  }" + NL + "}")
+
+FUNCTIONS = {
+ "swiftui": read("PromoFunctions.swift"),
+ "compose": read("PromoFunctions.kt"),
+ "react": read("functions.tsx"),
+}
+FUNCTION_TABS = tabs(swiftui=box("swift", FUNCTIONS["swiftui"]),
+                     compose=box("kotlin", FUNCTIONS["compose"]),
+                     react=box("tsx", FUNCTIONS["react"]))
 
 steps = [
 ("Start the producer folder", f'''
@@ -118,12 +159,12 @@ react=f"""{box("sh", BIND["react"])}
             <p>The file holds one wrapper per component (<code>PromoTextNode</code> with <code>text</code> and <code>role</code>, <code>PromoImageNode</code>, <code>PromoButtonNode</code> with <code>emitTap()</code>), a string-literal union per declared enum (<code>PromoTextRole</code>), a discriminated <code>PromoAction</code> union with a <code>promoAction(action)</code> decoder, and <code>PromoVocabulary.assertMatches</code>. It imports only <code>@get-milano/core</code>.</p>""")}
             <p>A property the vocabulary declares non-optional is a non-optional property in the generated code: the gate guarantees it is there. Commit the file, and regenerate it whenever the vocabulary changes; the compiler then lists every place in the app the change touches.</p>'''),
 ("Add the SDK and the producer files to the app", tabs(
-swiftui=f"""<p>In Xcode, File, Add Package Dependencies, and enter the repository URL; choose "Up to Next Major" from <code>2.0.0</code> and add the <code>MilanoSDK</code> product to the app target. In a <code>Package.swift</code> it is:</p>
+swiftui=f"""<p>In Xcode, File, Add Package Dependencies, and enter the repository URL; choose "Up to Next Major" from <code>2.1.0</code> and add the <code>MilanoSDK</code> product to the app target. In a <code>Package.swift</code> it is:</p>
             {box("swift", SPM, "Package.swift")}
             <p>A tagged release resolves to a prebuilt, signed <code>MilanoSDK.xcframework</code>. Then add <code>milano/vocabulary.json</code> and <code>milano/documents/banner.json</code> to the app target: drag them into the project navigator, tick the target, and leave "Copy items if needed" unchecked, so the project references the files where the CLI wrote them. Xcode copies them into the bundle at build time, and an edited document is in the next build.</p>""",
-compose=f"""<p>The engine is on GitHub Packages, whose Maven registry needs a token with <code>read:packages</code> even for public artifacts (put <code>gpr.user</code> and <code>gpr.token</code> in <code>~/.gradle/gradle.properties</code>). In the app module's <code>build.gradle.kts</code>, the dependencies and a copy task that carries the producer folder's files into the assets before every build:</p>
+compose=f"""<p>The engine is on Maven Central, so nothing but <code>mavenCentral()</code> is needed. In the app module's <code>build.gradle.kts</code>, the dependencies and a copy task that carries the producer folder's files into the assets before every build:</p>
             {box("gradle", GRADLE, "app/build.gradle.kts")}
-            <p>Without a token, the release page carries <code>engine-compose-android-2.0.0.aar</code> to drop into <code>libs/</code>, and a checkout of the SDK can be consumed from source with <code>includeBuild</code>. The copy task keeps the app's <code>assets/milano/</code> equal to the two files in <code>milano/</code>, so an edited document is in the next build and nothing is duplicated by hand.</p>""",
+            <p>Two other ways in, if you need them: every release also goes to GitHub Packages (whose Maven registry wants a token with <code>read:packages</code> even for public artifacts), and carries <code>engine-compose-android-2.1.0.aar</code> on the release page to drop into <code>libs/</code>. A checkout of the SDK can be consumed from source with <code>includeBuild</code>. The copy task keeps the app's <code>assets/milano/</code> equal to the two files in <code>milano/</code>, so an edited document is in the next build and nothing is duplicated by hand.</p>""",
 react=f"""{box("sh", "npm install @get-milano/core @get-milano/react")}
             <p>Two packages and nothing native: no autolinking, no pod install, because Milano draws nothing. The same two serve React on the web; only the components in the bridge change. The app imports the vocabulary and the banner straight from <code>milano/</code> as JSON modules (<code>resolveJsonModule</code>), which is fine for this document since all its numbers are integers.</p>
             <div class="callout note">
@@ -147,6 +188,40 @@ compose=f"""{box("kotlin", read("PromoBanner.kt"), "app/src/main/kotlin/com/exam
 react=f"""{box("tsx", read("banner.tsx"), "src/milano/banner.tsx")}
             <p>Put <code>&lt;PromoBanner /&gt;</code> wherever the banner belongs. The builder is memoized because a new builder means a new build; <code>MilanoHost</code> subscribes to the view and tears it down when it unmounts.</p>""")}
             <p>Build and run: the image loads, the title reads "Summer sale, Ada", the button opens the offer. The handler is the last capability check: the gate proved <code>url</code> is a string, the app decides that only <code>https</code> leaves it. The failure content is where a rejected document lands; for an optional surface, nothing is the right thing to show.</p>'''),
+("Everything else the contract gives you", f'''
+            <p>The banner uses a fraction of what a document can do. Everything below is the same contract, needs no new app code beyond what a feature explicitly asks for, and is documented in full in the <a href="/sdk/">SDK guides</a>.</p>
+            <p>This document is a small basket. It repeats a list with a stable identity per row, edits that list in place, keeps a derived count in step, reacts to being shown, and formats money through a function the app computes:</p>
+            {box("json", read("documents/features.json"), "milano/documents/features.json")}
+            <table>
+              <tr><th>What it uses</th><th>What it is</th></tr>
+              <tr><td><code>$repeat</code> with <code>key</code></td><td>One template per element of an array. The <code>key</code> makes a row's identity follow the element, so removing the first row does not renumber the rest. Without it, rows are identified by position.</td></tr>
+              <tr><td><code>$append</code>, <code>$remove</code>, <code>$update</code></td><td>Change one element of a list in state: add, drop, or set one field. Inside the template, <code>item_index</code> is the row's position at the moment of the tap, so a row edits itself.</td></tr>
+              <tr><td><code>watch</code></td><td>Action lists that run when a state key changes, as part of the change. Here it keeps <code>count</code> in step with the list. A watch never triggers another watch, so there is no cascade to reason about.</td></tr>
+              <tr><td><code>on</code></td><td>Lifecycle bindings: <code>appear</code> when the host says the view is on screen, <code>disappear</code> when it leaves. The host container delivers both; Milano infers nothing.</td></tr>
+              <tr><td><code>formatMoney(...)</code></td><td>A function your app computes, declared in the vocabulary and called by its bare name. The contract's own functions carry a <code>$</code> (<code>$concat</code>, <code>$str</code>, <code>$length</code>), so yours can be named anything, <code>round</code> included, without either shadowing the other.</td></tr>
+            </table>
+            <h3 class="plain">Declaring and using your own functions</h3>
+            <p>Formatting is the usual reason: money, dates, plurals, units. The document should not carry locale rules, and Milano should not guess them, so the app computes them. Declare the function in the vocabulary, with its argument types and what it returns:</p>
+            {box("json", FUNCTION_DECLARATION, "milano/vocabulary.json")}
+            <p>Then give the engine one function handler. It answers every function the vocabulary declares, for every view that engine builds:</p>
+            {switcher()}
+            {FUNCTION_TABS}
+            <p>Documents then call it like any other function: <code>formatMoney(item.cents, 'EUR')</code>. The gate checks the call against the declaration, so a wrong argument count or type fails the build rather than the screen. A function must be <strong>pure over its arguments</strong>: the same arguments always give the same value. That is why the locale is passed in from context rather than read inside the handler, and it is what lets the engine call it whenever a dependency changes.</p>
+            <div class="callout note">
+              <div class="title">While you are still writing documents</div>
+              <p><code>npm run check</code> has no app to ask, so it answers every declared function with the zero value of its return type: an empty string here. The document is still fully type-checked; only the formatting is missing. The <a href="/playground/">playground</a> answers a small library of functions if you want to see values.</p>
+            </div>
+            <h3 class="plain">The rest, in one place</h3>
+            <table>
+              <tr><th>Feature</th><th>What it is for</th><th>Guide</th></tr>
+              <tr><td>Typed results and failures</td><td>An action's handler answers with a value the document reads as <code>result</code>, or fails with a reason it reads as <code>failure</code>, so error copy lives in the document.</td><td><a href="/sdk/documents#failure-payloads">Writing documents</a></td></tr>
+              <tr><td>Dispatch identity</td><td>Every dispatched action carries a process-unique <code>dispatchId</code>: the idempotency key for the request your handler makes.</td><td><a href="/sdk/bridge#the-action-funnel">Creating a bridge</a></td></tr>
+              <tr><td>Document replacement</td><td><code>view.replace(document)</code> swaps a live view's document, keeping the state whose declaration is unchanged: hot reload, or a refreshed document, without losing what the user typed.</td><td><a href="/sdk/bridge#replacing-a-document">Creating a bridge</a></td></tr>
+              <tr><td>Capability grants</td><td>A surface can narrow the actions a document may dispatch, or declare extra ones for itself, so a banner cannot reach what a settings screen can.</td><td><a href="/sdk/bridge#granting-capabilities-per-surface">Creating a bridge</a></td></tr>
+              <tr><td>Context that changes</td><td>A context handle pushes new values into every live view: sign-in, feature flags, locale.</td><td><a href="/sdk/guidelines">Guidelines</a></td></tr>
+              <tr><td>Analytics</td><td>Impressions, taps, dispatches, and outcomes arrive as structured records, with no document or renderer involvement.</td><td><a href="/sdk/analytics">Analytics</a></td></tr>
+              <tr><td>Guardrails</td><td>Every rejection rule, every runtime occurrence, the limits, and the unknown-type policies.</td><td><a href="/sdk/guardrails">Guardrails</a></td></tr>
+            </table>'''),
 ("Change the banner", f'''
             <p>Edit <code>milano/documents/banner.json</code>: new copy, a different image, a second line of text. Run <code>npm run check</code>, rebuild the app, and the change is on screen. No app code moved, because the app bundles the producer folder's files: from here on, changing what the banner says is a change in <code>milano/</code>, checked by the CLI, and the app is rebuilt with it.</p>
             <p>When the vocabulary itself changes (a new component, a new property), bump its version and let the CLI say whether the bump is right before the app team depends on it:</p>

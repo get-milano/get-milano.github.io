@@ -1,0 +1,149 @@
+{
+  "version": "2.1.0",
+  "vocabulary": {
+    "name": "promo",
+    "min": "1.1.0"
+  },
+  "state": {
+    "items": {
+      "array": {
+        "record": {
+          "id": "string",
+          "name": "string",
+          "cents": "int"
+        }
+      }
+    },
+    "count": "int",
+    "seen": "bool"
+  },
+  "root": {
+    "type": "Column",
+    "id": "basket",
+    "children": [
+      {
+        "type": "Text",
+        "id": "heading",
+        "properties": {
+          "text": {
+            "$expr": "$concat('Basket: ', $str(state.count), ' items')"
+          },
+          "role": "title"
+        }
+      },
+      {
+        "type": "$repeat",
+        "id": "rows",
+        "items": {
+          "$expr": "state.items"
+        },
+        "as": "item",
+        "key": {
+          "$expr": "item.id"
+        },
+        "children": [
+          {
+            "type": "Column",
+            "children": [
+              {
+                "type": "Text",
+                "id": "line",
+                "properties": {
+                  "text": {
+                    "$expr": "$concat(item.name, ' ', formatMoney(item.cents, 'EUR'))"
+                  },
+                  "role": "body"
+                }
+              },
+              {
+                "type": "Button",
+                "id": "upgrade",
+                "properties": {
+                  "label": "Make it a large",
+                  "enabled": true
+                },
+                "on": {
+                  "tap": [
+                    {
+                      "action": "$update",
+                      "key": "items",
+                      "at": {
+                        "$expr": "item_index"
+                      },
+                      "field": "cents",
+                      "value": {
+                        "$expr": "item.cents + 50"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Button",
+                "id": "remove",
+                "properties": {
+                  "label": "Remove",
+                  "enabled": true
+                },
+                "on": {
+                  "tap": [
+                    {
+                      "action": "$remove",
+                      "key": "items",
+                      "at": {
+                        "$expr": "item_index"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Button",
+        "id": "add",
+        "properties": {
+          "label": "Add an espresso",
+          "enabled": {
+            "$expr": "state.count < 5"
+          }
+        },
+        "on": {
+          "tap": [
+            {
+              "action": "$append",
+              "key": "items",
+              "value": {
+                "id": "espresso",
+                "name": "Espresso",
+                "cents": 250
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "on": {
+    "appear": [
+      {
+        "action": "$set",
+        "key": "seen",
+        "value": true
+      }
+    ]
+  },
+  "watch": {
+    "items": [
+      {
+        "action": "$set",
+        "key": "count",
+        "value": {
+          "$expr": "$length(state.items)"
+        }
+      }
+    ]
+  }
+}

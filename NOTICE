@@ -1,0 +1,22 @@
+Milano website (get-milano.dev)
+Copyright 2026 Ezequiel (Kimi) Aceto
+
+This repository publishes https://get-milano.dev. What it contains is
+licensed in three parts.
+
+1. Prose, page structure, and styling: CC BY 4.0, per LICENSE. That covers
+   the pages, the getting-started tutorial's text, and this site's own
+   design.
+
+2. Code samples: Apache-2.0, the license of the SDK they are taken from
+   (https://github.com/get-milano/sdk). Every snippet in the tutorial is
+   generated from the sources under tools/getting-started/, which are
+   checked against the SDK, and you may use them in your own projects under
+   Apache-2.0 without attribution in your binary.
+
+3. The Milano name, the Milano logo (get-milano.png, og-cover.png,
+   favicon.ico, icon-192.png, icon-512.png, apple-touch-icon.png), and the
+   get-milano.dev domain are owned by Ezequiel (Kimi) Aceto. Neither
+   license above grants permission to use them as your own branding, or in
+   a way that suggests your project is endorsed by or affiliated with
+   Milano. Referring to Milano by name, and linking here, is fine.
