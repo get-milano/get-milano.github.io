@@ -1,14 +1,9 @@
 repositories {
-    maven("https://maven.pkg.github.com/get-milano/sdk") {
-        credentials {
-            username = providers.gradleProperty("gpr.user").get()
-            password = providers.gradleProperty("gpr.token").get()
-        }
-    }
+    mavenCentral()
 }
 
 dependencies {
-    implementation("dev.get-milano:engine-compose:2.0.0")
+    implementation("dev.get-milano:engine-compose:2.1.0")
     implementation("io.coil-kt:coil-compose:2.7.0")   // the image loader the bridge below uses
 }
 

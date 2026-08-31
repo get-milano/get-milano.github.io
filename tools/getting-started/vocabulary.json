@@ -1,7 +1,7 @@
 {
-  "milano": "2.0.0",
+  "milano": "2.1.0",
   "name": "promo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "components": {
     "Column": { "children": true },
     "Text": {
@@ -27,5 +27,8 @@
   },
   "actions": {
     "openUrl": { "parameters": { "url": "string" } }
+  },
+  "functions": {
+    "formatMoney": { "arguments": ["int", "string"], "returns": "string" }
   }
 }

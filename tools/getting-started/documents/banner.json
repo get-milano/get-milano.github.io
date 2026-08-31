@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "vocabulary": { "name": "promo", "min": "1.0.0" },
   "context": { "userName": "string" },
   "root": {
@@ -17,7 +17,7 @@
       {
         "type": "Text",
         "properties": {
-          "text": { "$expr": "concat('Summer sale, ', context.userName)" },
+          "text": { "$expr": "$concat('Summer sale, ', context.userName)" },
           "role": "title"
         }
       },

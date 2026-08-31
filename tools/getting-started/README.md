@@ -4,9 +4,12 @@
 code the tutorial shows is code that was checked against the SDK rather
 than typed into HTML:
 
-- `vocabulary.json`, `documents/banner.json`: validated with
-  `milano validate`; the bindings the page describes come from
-  `milano bindings` over this vocabulary (`--swift-prefix Promo`,
+- `vocabulary.json`, `documents/*.json`: validated by `generate.py` itself
+  on every run, through the specs' reference gate (a sibling `specs`
+  checkout, or `MILANO_SPECS_DIR`); the page cannot be regenerated from a
+  document the gate would refuse. Without a checkout it says so and
+  continues. The bindings the page describes come from `milano bindings`
+  over this vocabulary (`--swift-prefix Promo`,
   `--kotlin-package com.example.myapp.milano --kotlin-prefix Promo`,
   `--ts-prefix Promo`).
 - `PromoBridge.swift`, `PromoBanner.swift`: typechecked with
@@ -17,6 +20,12 @@ than typed into HTML:
   `:app:compileDebugKotlin`; the Gradle copy task was run in the same sample.
 - `bridge.tsx`, `banner.tsx`: typechecked by dropping them into the SDK's
   React Native sample and running its `tsc`.
+- `PromoFunctions.swift`, `PromoFunctions.kt`, `functions.tsx`: the function
+  handler each platform installs, shown in the last step. They are fragments
+  of an engine construction rather than whole files, so they are checked by
+  reading them against the engines' own APIs (`MilanoClosureFunctionHandler`
+  in Swift, the `MilanoFunctionHandler` fun interface in Kotlin, a plain
+  closure in TypeScript) rather than compiled.
 - `page-template.html`: the page around the steps; `generate.py` fills in
   the steps, highlights the code (JSON, Swift, Kotlin, Gradle, TypeScript,
   terminal), and writes the page.
